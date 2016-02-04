@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<title>FIDOO - Format Identification of Digital Objects Online</title>
+<script type="text/javascript" src="lib/fidoo-setup.js"></script>
+<script type="text/javascript" src="lib/fidoo-core.js"></script>
+<style>
+* {
+	font-family: Helvetica;
+	font-size: 16px;
+	margin: 2px;
+	}
+div, p {
+	font-size: 80%;
+	display: block;
+	}
+#debug {
+	font-family: Courier;
+	}
+</style>
+<script type="text/javascript">
+// javascript only, no jquery or other libs
+// fidoo must be totally vanilla
+window.onload = function() { 
+	 document.getElementById("files").addEventListener("change", handleFileSelect);
+	 }
+function write(element, content) {
+	document.getElementById(element).innerHTML = content;
+	}
+function appendChild(element, content) {
+	document.getElementById(element).appendChild(content);
+	}
+function appendHTML(element, content) {
+	document.getElementById(element).innerHTML += content;
+	}
+
+function handleFileSelect(evt) {
+	var files = document.getElementById("files").files;
+	document.getElementById("fileList").innerHTML = "";
+	for(var i = 0, file; file = files[i]; i++) {
+		var filename = escape(file.name);
+		var a = document.createElement("a");
+		a.setAttribute("href","#");
+		a.setAttribute("onclick", "javascript:showResult(this.textContent)");
+		a.innerHTML = decodeURIComponent(filename);
+		appendChild("fileList", a);
+		appendHTML("fileList", " ");
+		Fidoo.processFileObject(file);
+		}
+	write("info", "click on a filename for info");
+	}
+
+function showResult(filename) {
+	write("info", filename);
+	}
+
+</script>
+</head>
+<body>
+<h1>Fidoo - Format Identification of Digital Objects Online</h1>
+<h2>Version 0.1-VeryBeta. Might or might not satisfy you.</h2>
+<hr />
+Select one or more files: <input type="file" name="files[]" id="files" multiple />
+<hr />
+<h3>Files</h3>
+<div id="fileList"></div>
+<hr />
+<h3>File info</h3>
+<div id="info"></div>
+<hr />
+<h3>Debug</div>
+<div id="debug">debug</div>
+<hr />
+<h5>TechMaurice 2016</h5>
+</body>
+</html>
