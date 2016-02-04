@@ -1,0 +1,26 @@
+{
+  "name": "fidoo",
+  "version": "0.0.1",
+  "description": "Format Identification of Digital Objects Online - A javascript library to determine the file-type and version of a file.",
+  "main": "index.js",
+  "scripts": {
+    "test": "-v"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/techmaurice/fidoo.git"
+  },
+  "keywords": [
+    "fidoo",
+    "fidoo",
+    "file",
+    "format",
+    "identification"
+  ],
+  "author": "Maurice de Rooij",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/techmaurice/fidoo/issues"
+  },
+  "homepage": "https://github.com/techmaurice/fidoo#readme"
+}
