@@ -18,10 +18,28 @@ div, p {
 #debug {
 	font-family: Courier;
 	}
+.link {
+	color: #0000ff;
+	background-color: #ffffff;
+	text-decoration: underline;
+	cursor: pointer;
+	}
+.link:hover {
+	color: #ffffff;
+	background-color: #0000ff;
+	text-decoration: underline;
+	}
+.clickLink {
+	color: #ffffff;
+	background-color: #0000ff;
+	text-decoration: underline;
+	cursor: pointer;
+	}
+
 </style>
 <script type="text/javascript">
 // javascript only, no jquery or other libs
-// fidoo must be totally vanilla
+var files = {};
 window.onload = function() { 
 	 document.getElementById("files").addEventListener("change", handleFileSelect);
 	 }
@@ -36,38 +54,49 @@ function appendHTML(element, content) {
 	}
 
 function handleFileSelect(evt) {
-	var files = document.getElementById("files").files;
+	files = document.getElementById("files").files;
+// 	console.dir(files);
 	document.getElementById("fileList").innerHTML = "";
 	for(var i = 0, file; file = files[i]; i++) {
 		var filename = escape(file.name);
-		var a = document.createElement("a");
-		a.setAttribute("href","#");
-		a.setAttribute("onclick", "javascript:showResult(this.textContent)");
-		a.innerHTML = decodeURIComponent(filename);
-		appendChild("fileList", a);
-		appendHTML("fileList", " ");
-		Fidoo.processFileObject(file);
+		var link = document.createElement("span");
+		link.setAttribute("class","link");
+		link.setAttribute("onclick","showResult(this);");
+		// filename needs to be escaped like:
+		// escape->decodeURIComponent->unescape
+		// because of special characters like "ï"
+		link.innerHTML = unescape(decodeURIComponent(escape(filename)));
+		appendChild("fileList", link);
+		appendHTML("fileList", " / ");
 		}
 	write("info", "click on a filename for info");
 	}
 
-function showResult(filename) {
-	write("info", filename);
+function showResult(that) {
+	var anchors = document.getElementsByTagName("span");
+		for(var i = 0; i < anchors.length; i++) {
+			anchors[i].className = "link";
+			}
+	that.className = "clickLink";
+	var info = Fidoo.processFileObjectBrowser(files, escape(that.textContent));
+	console.dir(info);
+	write("info", "<pre>" + JSON.stringify(info, null, "\t") + "</pre>");
+	return true;
 	}
 
 </script>
 </head>
 <body>
 <h1>Fidoo - Format Identification of Digital Objects Online</h1>
-<h2>Version 0.1-VeryBeta. Might or might not satisfy you.</h2>
+<h2>Version 0.0.1</h2>
 <hr />
 Select one or more files: <input type="file" name="files[]" id="files" multiple />
 <hr />
 <h3>Files</h3>
-<div id="fileList"></div>
+<div id="fileList">none</div>
 <hr />
-<h3>File info</h3>
-<div id="info"></div>
+<h3>Info</h3>
+<div id="info">Browse one or more files and click on the name</div>
 <hr />
 <h3>Debug</div>
 <div id="debug">debug</div>

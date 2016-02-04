@@ -18,7 +18,7 @@
     "identification"
   ],
   "author": "Maurice de Rooij",
-  "license": "ISC",
+  "license": "Apache 2.0",
   "bugs": {
     "url": "https://github.com/techmaurice/fidoo/issues"
   },
