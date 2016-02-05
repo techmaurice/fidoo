@@ -26,10 +26,10 @@ function processArguments() {
 		if(val.indexOf('=') !== -1) {
 			val = val.split("=");
 			if(val[0] === "-input") {
-				fidoo.setInputFileNode(val[1]);
+				fidoo.setNodeInputFile(val[1]);
 				}
 			if(val[0] === "-output") {
-				fidoo.setOutputFileNode(val[1]);
+				fidoo.setNodeOutputFile(val[1]);
 				}
 			}
 	});
