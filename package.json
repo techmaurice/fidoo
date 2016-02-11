@@ -2,7 +2,7 @@
   "name": "fidoo",
   "version": "0.0.1",
   "description": "Format Identification of Digital Objects Online - A javascript library to determine the file-type and version of a file.",
-  "main": "index.js",
+  "main": "fidoo.js",
   "scripts": {
     "test": "-v"
   },
