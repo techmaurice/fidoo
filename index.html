@@ -78,10 +78,29 @@ function showResult(that) {
 			anchors[i].className = "link";
 			}
 	that.className = "clickLink";
-	var info = Fidoo.processFileObjectBrowser(files, escape(that.textContent));
-	console.dir(info);
+	var filename = escape(that.textContent);
+	 // warning: Fidoo.processFileObjectBrowser is an async function
+	 // and returns info from the browser
+	 // the result is in Fidoo.identifyResults[filename]
+	 // that is why we use helper function "waitForResult"
+	 // which prints the result to debug if available
+	 // else it keeps trying recursively
+	var info = Fidoo.processFileObjectBrowser(files, filename);
 	write("info", "<pre>" + JSON.stringify(info, null, "\t") + "</pre>");
+	var result = waitForResult(filename);
 	return true;
+	}
+
+function waitForResult(filename) { // recursive and dangerous
+	if(Fidoo.identifyResults[filename] === undefined) {
+		setTimeout(function() {
+			waitForResult(filename);
+			}, 0);
+		}
+	else {
+		write("debug", "<pre>" + JSON.stringify(Fidoo.identifyResults[filename], null, "\t") + "</pre>");
+		return true;
+		}
 	}
 
 </script>
