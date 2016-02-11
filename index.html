@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="UTF-8">
-<title>FIDOO - Format Identification of Digital Objects Online</title>
+<title>Fidoo Lib Demo - Format Identification of Digital Objects Online</title>
 <script type="text/javascript" src="lib/fidoo-setup.js"></script>
 <script type="text/javascript" src="lib/fidoo-core.js"></script>
 <style>
@@ -15,7 +15,7 @@ div, p {
 	font-size: 80%;
 	display: block;
 	}
-#debug {
+pre {
 	font-family: Courier;
 	}
 .link {
@@ -69,7 +69,7 @@ function handleFileSelect(evt) {
 		appendChild("fileList", link);
 		appendHTML("fileList", " / ");
 		}
-	write("info", "click on a filename for info");
+	write("infotext", "click on a filename for info");
 	}
 
 function showResult(that) {
@@ -79,14 +79,17 @@ function showResult(that) {
 			}
 	that.className = "clickLink";
 	var filename = escape(that.textContent);
-	 // warning: Fidoo.processFileObjectBrowser is an async function
-	 // and returns info from the browser
-	 // the result is in Fidoo.identifyResults[filename]
-	 // that is why we use helper function "waitForResult"
-	 // which prints the result to debug if available
-	 // else it keeps trying recursively
+	// warning: Fidoo.processFileObjectBrowser is an async function
+	// because it uses async HTML5 fileReader
+	// and returns info from the browser
+	// the result is in Fidoo.identifyResults[filename]
+	// that is why we use helper function "waitForResult"
+	// which prints the result to debug if available
+	// else it keeps trying recursively
+	// TODO: needs event dispatcher for (result, filename)
+	// TODO: so folks can use a listener
 	var info = Fidoo.processFileObjectBrowser(files, filename);
-	write("info", "<pre>" + JSON.stringify(info, null, "\t") + "</pre>");
+	write("infotext", "<pre>" + JSON.stringify(info, null, "\t") + "</pre>");
 	var result = waitForResult(filename);
 	return true;
 	}
@@ -98,7 +101,7 @@ function waitForResult(filename) { // recursive and dangerous
 			}, 0);
 		}
 	else {
-		write("debug", "<pre>" + JSON.stringify(Fidoo.identifyResults[filename], null, "\t") + "</pre>");
+		write("debugtext", "<pre>" + JSON.stringify(Fidoo.identifyResults[filename], null, "\t") + "</pre>");
 		return true;
 		}
 	}
@@ -107,7 +110,7 @@ function waitForResult(filename) { // recursive and dangerous
 </head>
 <body>
 <h1>Fidoo - Format Identification of Digital Objects Online</h1>
-<h2>Version 0.0.1</h2>
+<h2>Version 0.0.2</h2>
 <hr />
 Select one or more files: <input type="file" name="files[]" id="files" multiple />
 <hr />
@@ -115,10 +118,10 @@ Select one or more files: <input type="file" name="files[]" id="files" multiple 
 <div id="fileList">none</div>
 <hr />
 <h3>Info</h3>
-<div id="info">Browse one or more files and click on the name</div>
+<div id="infotext"><pre>Browse one or more files and click on the name</pre></div>
 <hr />
 <h3>Debug</div>
-<div id="debug">debug</div>
+<div id="debugtext"><pre>debug</pre></div>
 <hr />
 <h5>TechMaurice 2016</h5>
 </body>
