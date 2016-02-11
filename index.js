@@ -35,6 +35,7 @@ function processArguments() {
 	});
 	if(fidoo.nodeInputFile !== "" && fidoo.nodeOutputFile !== "") {
 		console.log("Using filelist from '" + fidoo.nodeInputFile + "', outputting to '" + fidoo.nodeOutputFile + "'");
+		fidoo.identifyFilesNode();
 		}
 	else {
 		console.log("Error: empty or invalid arguments");
