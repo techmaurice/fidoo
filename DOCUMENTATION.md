@@ -26,8 +26,8 @@ console.dir(Fidoo.extensionPuidMap);
 console.dir(Fidoo.mimePuidMapJSON); 
 ```
 
-```javascript
  node.js: 
+```javascript
 var fidoo = module.Fidoo; 
 fidoo.loadSignatureData(); 
 fidoo.dumpObject(fidoo.pronomSignatures); 
