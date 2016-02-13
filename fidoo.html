@@ -35,13 +35,20 @@ pre {
 	text-decoration: underline;
 	cursor: pointer;
 	}
-
+#files {
+	visibility: hidden;
+	height:0px;
+	width:0px;
+	}
 </style>
 <script type="text/javascript">
-// javascript only, no jquery or other libs
+// example Fidoo demo browser app
+// pure javascript only, no jquery or other libraries
 var files = {};
+var maxFiles = 250;
 window.onload = function() { 
 	 document.getElementById("files").addEventListener("change", handleFileSelect);
+	 document.getElementById("browse").addEventListener("click", function() {document.getElementById("files").click();});
 	 }
 function write(element, content) {
 	document.getElementById(element).innerHTML = content;
@@ -55,7 +62,6 @@ function appendHTML(element, content) {
 
 function handleFileSelect(evt) {
 	files = document.getElementById("files").files;
-// 	console.dir(files);
 	document.getElementById("fileList").innerHTML = "";
 	for(var i = 0, file; file = files[i]; i++) {
 		var filename = escape(file.name);
@@ -68,60 +74,74 @@ function handleFileSelect(evt) {
 		link.innerHTML = unescape(decodeURIComponent(escape(filename)));
 		appendChild("fileList", link);
 		appendHTML("fileList", " / ");
+		if(maxFiles === i) {
+			break;
+			}
 		}
-	write("infotext", "click on a filename for info");
+	write("result", "click on a filename for info");
 	}
 
 function showResult(that) {
 	var anchors = document.getElementsByTagName("span");
-		for(var i = 0; i < anchors.length; i++) {
-			anchors[i].className = "link";
-			}
+	for(var i = 0; i < anchors.length; i++) {
+		anchors[i].className = "link";
+		}
 	that.className = "clickLink";
 	var filename = escape(that.textContent);
-	// warning: Fidoo.processFileObjectBrowser is an async function
-	// because it uses async HTML5 fileReader
-	// and returns info from the browser
-	// the result is in Fidoo.identifyResults[filename]
-	// that is why we use helper function "waitForResult"
-	// which prints the result to debug if available
-	// else it keeps trying recursively
-	// TODO: needs event dispatcher for (result, filename)
-	// TODO: so folks can use a listener
-	var info = Fidoo.processFileObjectBrowser(files, filename);
-	write("infotext", "<pre>" + JSON.stringify(info, null, "\t") + "</pre>");
-	var result = waitForResult(filename);
+	var readFile = readFileAndIdentify(files, filename);
 	return true;
 	}
 
-function waitForResult(filename) { // recursive and dangerous
-	if(Fidoo.identifyResults[filename] === undefined) {
-		setTimeout(function() {
-			waitForResult(filename);
-			}, 0);
+function readFileAndIdentify(fileObject, filename) {
+	for(var i = 0, file; file = files[i]; i++) {
+		var search = escape(file.name);
+		var mimetype = file.type;
+		if(search === filename) {
+			var browserInfo = returnBrowserInfo(file);
+			var fileReader = new FileReader();
+			fileReader.onload = function(e) {
+				try {
+// 					var result = Fidoo.identifyFile(e.target.result);
+					var result = Fidoo.identifyFile(e.target.result, null, null, filename, mimetype);
+					write("result", "<pre>" + JSON.stringify(result, null, " ") + "</pre>");
+				}
+				catch(error) {
+					write("result", "<pre>Could not read '" + filename + "': " + error + ": " + error + "</pre>");
+					}
+			};
+			fileReader.onerror = function(error) {
+				write("result", "<pre>Could not read '" + filename + "': " + error.target.error.name + ": " + error.target.error.message + "</pre>");
+			};
+			fileReader.readAsBinaryString(file);
+			return true;
+			}
 		}
-	else {
-		write("debugtext", "<pre>" + JSON.stringify(Fidoo.identifyResults[filename], null, "\t") + "</pre>");
-		return true;
-		}
-	}
+	return true;
+	} // end readFileAndIdentify
+
+	function returnBrowserInfo(fileObject) {
+		return {
+			"lastModified": fileObject.lastModified,
+			"lastModifiedDate": fileObject.lastModifiedDate,
+			"name": fileObject.name,
+			"size": fileObject.size,
+			"mimetype": fileObject.type
+			};
+		} // end returnBrowserInfo
 
 </script>
 </head>
 <body>
 <h1>Fidoo - Format Identification of Digital Objects Online</h1>
-<h2>Version 0.0.2</h2>
+<h2>Lib version 0.0.2 - demo browser app</h2>
 <hr />
-Select one or more files: <input type="file" name="files[]" id="files" multiple />
+Select one or more files: <button id="browse">Browse files</button> <input type="file" name="files[]" id="files" multiple />
 <hr />
 <h3>Files</h3>
 <div id="fileList">none</div>
 <hr />
 <h3>Info</h3>
-<div id="infotext"><pre>Browse one or more files and click on the name</pre></div>
-<hr />
-<h3>Debug</h3>
-<div id="debugtext"><pre>debug</pre></div>
+<div id="result"><pre>Browse one or more files and click on the name</pre></div>
 <hr />
 <h5>TechMaurice 2016</h5>
 </body>
