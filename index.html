@@ -29,18 +29,185 @@
       </header>
       <section>
         <h1>
-<a id="fidoo" class="anchor" href="#fidoo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FIDOO</h1>
+<a id="fidoo" class="anchor" href="#fidoo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fidoo</h1>
 
 <h2>
 <a id="format-identification-of-digital-objects-online" class="anchor" href="#format-identification-of-digital-objects-online" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Format Identification of Digital Objects Online</h2>
 
 <p>A javascript library to determine the file-type and version of a file.</p>
 
-<p>FIDOO can be used to check file-types before uploading or as a node.js app to analyse files on a file-system.</p>
+<p>Fidoo can be used to check file-types before uploading or as a node.js app to analyse files on a file-system.</p>
 
-<p>FIDOO uses a trimmed down and modified  <a href="https://github.com/openpreserve/fido/">FIDO</a> signature version of <a href="http://www.nationalarchives.gov.uk/pronom/">PRONOM</a> signature files.</p>
+<p>Fidoo uses a trimmed down and modified  <a href="https://github.com/openpreserve/fido/">FIDO</a> signature version of <a href="http://www.nationalarchives.gov.uk/pronom/">PRONOM</a> signature files.</p>
 
 <p>Demo: <a href="http://www.techmaurice.com/fidoo/">http://www.techmaurice.com/fidoo/</a></p>
+
+<h3>
+<a id="fidoo-is-a-file-format-identification-library" class="anchor" href="#fidoo-is-a-file-format-identification-library" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fidoo is a file format identification library</h3>
+
+<p>Although the example node.js app and web app that go with the library work as expected, Fidoo is not a turn-key app but a file format identification library written in Javascript. Fidoo supports implementation in both node.js and webbased HTML5 applications. </p>
+
+<p>Fidoo only has one function, that is to identify the format of files and offers no support to read or write files, except reading its own configuration and signature-files. It is up to you how you supply the binary content of files to Fidoo to analyse the format and what to do with the results. </p>
+
+<p>This makes Fidoo a "real" Javascript library you can use in your own projects. Some examples: to check the filetype of files before uploading to a website or offline as part of a server workflow. </p>
+
+<h3>
+<a id="synchronous-execution" class="anchor" href="#synchronous-execution" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Synchronous execution</h3>
+
+<p>Fidoo is executed synchronous. You supply a binary string and get a Javascript object back as resultset. Please note that execution in a browser will be asynchronous due to the way browsers read files from the local filesystem.</p>
+
+<p>In node.js you can use both synchronous and asynchronous functions to read files, although asynchronous reading is recommended as it prevents application blocking and yields better performance due to the internal workings of node.js. The downside of asynchronous reading is you have to keep track of results using events and/or callbacks instead of waiting for them synchronously.</p>
+
+<h3>
+<a id="fidoo-functions" class="anchor" href="#fidoo-functions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fidoo functions</h3>
+
+<p>If you load <code>fidoo-core.js</code>, Fidoo is ready for use, after loading its configuration and signature files automatically.</p>
+
+<p>Although Fidoo contains multiple functions, there is only one you should use:
+<code>Fidoo.identifyFile(**binarystream**, **matchingMethod** (strict/relaxed), **disablePriority** (true/false), [, [**filename**], [**mimetype]])</code> </p>
+
+<p>which returns a Javascript object. </p>
+
+<p>Arguments matchingMethod and disablePriority are optional and default to what is configured. </p>
+
+<p>Arguments filename and mimetype are optional, but if these are supplied you will get a richer resultset returned with information about the extension and mimetype.</p>
+
+<h4>
+<a id="runtime-options" class="anchor" href="#runtime-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Runtime options</h4>
+
+<p>Before each call to <code>Fidoo.identifyFile</code> you can change configuration, for example to first perform "strict" identification of a file and successively a "relaxed" identification. Also you can enable or disable "priority override" at will, or one or both while calling <code>Fidoo.identifyFile</code>.</p>
+
+<h4>
+<a id="resultset" class="anchor" href="#resultset" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Resultset</h4>
+
+<p>Fidoo returns a resultset depending on configuration, and if you supplied the filename and/or mimetype. Because the resultset is a Javascript object, you can easily modify or enhance it, save it as a JSON file or insert it into a JSON database.</p>
+
+<p>Two main object arrays are passed back in the resultset: "result", "warning" and "error".</p>
+
+<p>Possible errors:
+<code>Fidoo.identifyFile expects at least one argument: binaryString (type: string)</code>
+This happens when you call Fidoo.identifyFile without arguments</p>
+
+<p><code>Fidoo.identifyFile expects binaryString to be a string, not an object</code>
+This happens when you pass an object instead of a string.</p>
+
+<p><code>Fidoo.identifyFile expects binaryString to be a string</code>
+This happens when you pass "something" else (eg. null, false) instead of a string.</p>
+
+<p>Possible warnings:
+<code>empty binaryString</code>
+This happens when the string is empty (ie. maybe an empty file).</p>
+
+<h3>
+<a id="example-app-usage" class="anchor" href="#example-app-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example app: usage</h3>
+
+<p>The Fidoo example app <code>fidoo.js</code> expects a plain text file with filenames (e.g. /path/to/file.txt) with one file per line and outputs a json file with results.</p>
+
+<p><code>node fidoo.js -input=~/fidoo_files.txt -output=~/fidoo_output.json</code></p>
+
+<p>Use quotes around filenames with spaces, like this:
+<code>node fidoo.js -input=~/fidoo_files.txt -output="~/fidoo output.json"</code></p>
+
+<p>Please note that all "logic" for reading and writing files is done in <code>fidoo.js</code> and not in the library <code>fidoo-core.js</code>. If you want to extend or change the app, please only do so in <code>fidoo.js</code>. It would be cool if you commit any offspring to the Fidoo repository on GitHub, so it can be incorporated as example. Give it a unique name (e.g. <code>fidoo-yourname.js</code> and push it to the main branch of Fidoo. Don't forget your documentation ;)</p>
+
+<h3>
+<a id="fidoo-global-object-variables-and-arrays" class="anchor" href="#fidoo-global-object-variables-and-arrays" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fidoo global object variables and arrays</h3>
+
+<p>Can be altered directly in the library, via fidoo-setup.js or during runtime by changing the variables, for example: <code>fidoo.debug = false;</code>.
+For all changes goes: <em>Danger, Will Robinson</em>! </p>
+
+<p>It is therefore recommended to ONLY alter the variables available in fidoo-setup.js. This setup file is loaded before any action is performed, but after the initial variables are loaded in the library. If the setup file is missing, this is silently ignored. This gives the advantage Fidoo will always run, but for node.js it also implies you can use different  settings with a single installation by rewriting or deleting the setup file.</p>
+
+<pre><code>    checkJSON: [],
+    chunkSize: 4096, // raw bytes
+    debug: true,
+    extensionPuidMap: {},
+    extensionPuidMapJSON: "extensionPuidMap-v84-0.json",
+    fidooSignatureFixesJSON: "fidooSignatureFixes-v84-0.json",
+    libVersion: "0.0.2",
+    matchingMethod: "strict",
+    mimePuidMap: {},
+    mimePuidMapJSON: "mimePuidMap-v84-0.json",
+    nodeJSONUri: "../json/",
+    disablePriority: false,
+    pronomSignatures: {},
+    pronomSignaturesJSON: "pronomSignatures-v84-0.json",
+    pronomSignatureVersion: 84,
+    rawGitUrl: "https://cdn.rawgit.com/techmaurice/fidoo/master/json/",
+    regexesMap: {},
+    runningNodeJS: typeof process !== "undefined",
+    signaturesLoaded: false,
+</code></pre>
+
+<h3>
+<a id="fidoo-object-functions" class="anchor" href="#fidoo-object-functions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fidoo Object functions</h3>
+
+<h4>
+<a id="browser" class="anchor" href="#browser" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Browser</h4>
+
+<p>TBA</p>
+
+<h4>
+<a id="nodejs" class="anchor" href="#nodejs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>node.js</h4>
+
+<p>TBA</p>
+
+<h3>
+<a id="file-format-signature-data-objects" class="anchor" href="#file-format-signature-data-objects" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>File Format Signature Data Objects</h3>
+
+<p>Objects in memory you can use in your own browser or node app:</p>
+
+<p>OBJECT.pronomSignatures: </p>
+
+<p>An array of PRONOM signatures, a trimmed down and modified version of the signatures generated by the original FIDO Python app of the Open Preservation Foundation. The original PRONOM signatures are provided by TNA UK. </p>
+
+<p>Signature updates are pushed to GitHub if there is a new version. Either update your fidoo git or download them manually.
+Converting signatures: consult the higly experimental (buggy sometimes) scripts in  "debug/". Meant to be run in a browser. You are on your own there.</p>
+
+<p>OBJECT.extensionPuidMap: 
+An array of extensions to PUIDS, e.g. ['x-fmt/230': ['audio/midi', 'x/x']]</p>
+
+<p>OBJECT.extensionPuidMap: 
+An array of PUIDS to extensions, e.g. ['audio/midi': ['x-fmt/230','fmt/x']]</p>
+
+<h4>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples</h4>
+
+<p>browser: </p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-en">console</span>.<span class="pl-en">dir</span>(<span class="pl-smi">Fidoo</span>.<span class="pl-smi">pronomSignatures</span>); 
+<span class="pl-en">console</span>.<span class="pl-en">dir</span>(<span class="pl-smi">Fidoo</span>.<span class="pl-smi">extensionPuidMap</span>); 
+<span class="pl-en">console</span>.<span class="pl-en">dir</span>(<span class="pl-smi">Fidoo</span>.<span class="pl-smi">mimePuidMapJSON</span>); </pre></div>
+
+<p>node.js: </p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> fidoo <span class="pl-k">=</span> <span class="pl-c1">module</span>.<span class="pl-smi">Fidoo</span>; 
+<span class="pl-smi">fidoo</span>.<span class="pl-en">dumpObject</span>(<span class="pl-smi">fidoo</span>.<span class="pl-smi">pronomSignatures</span>); 
+<span class="pl-smi">fidoo</span>.<span class="pl-en">dumpObject</span>(<span class="pl-smi">fidoo</span>.<span class="pl-smi">extensionPuidMap</span>); 
+<span class="pl-smi">fidoo</span>.<span class="pl-en">dumpObject</span>(<span class="pl-smi">fidoo</span>.<span class="pl-smi">mimePuidMap</span>); </pre></div>
+
+<h3>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h3>
+
+<p>Apache 2.0, see LICENSE.txt for more information</p>
+
+<h3>
+<a id="need-help-implementing-fidoo-into-your-project" class="anchor" href="#need-help-implementing-fidoo-into-your-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Need help implementing Fidoo into your project?</h3>
+
+<p>Drop an email and we can work something out.</p>
+
+<h3>
+<a id="notes" class="anchor" href="#notes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Notes</h3>
+
+<p>Although you are free to use Fidoo in your own projects, I would very much appreciate to get credited.</p>
+
+<p>If you use Fidoo in your workflow and/or think it is useful, consider making a donation through PayPal <a href="https://www.paypal.me/techmaurice">https://www.paypal.me/techmaurice</a>. Any amount is welcome and helps the development of Fidoo.</p>
+
+<p>If you have any questions, suggestions or a code fix, please submit these to Github <a href="https://github.com/techmaurice/fidoo/">https://github.com/techmaurice/fidoo/</a>.</p>
+
+<hr>
+
+<p>TechMaurice 2016</p>
 
 <p>TechMaurice 2016</p>
       </section>
