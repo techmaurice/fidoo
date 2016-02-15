@@ -65,9 +65,8 @@
 
 <p>Although Fidoo contains multiple functions, there is only one you should use:</p>
 
-<p><code>Fidoo.identifyFile(**binarystream** [[, **matchingMethod** (strict/relaxed)] [, **disablePriority** (true/false)] [, **filename**] [, **mimetype]])</code> </p>
-
-<p>which returns a Javascript object. </p>
+<p><code>Fidoo.identifyFile(**binarystream** [[, **matchingMethod** (strict/relaxed)] [, **disablePriority** (true/false)] [, **filename**] [, **mimetype]])</code> 
+which returns a Javascript object. </p>
 
 <p>Arguments matchingMethod and disablePriority are optional and default to what is configured. 
 If matchingMethod is "strict", matching PUIDs are only returned when <em>all</em> matches are satisfied for that particular signature (eg. BOF or BOF + EOF or VAR or BOF + VAR or BOF +  VAR + EOF, or a variation thereof).
