@@ -101,8 +101,7 @@ function readFileAndIdentify(fileObject, filename) {
 			var fileReader = new FileReader();
 			fileReader.onload = function(e) {
 				try {
-// 					var result = Fidoo.identifyFile(e.target.result);
-					var result = Fidoo.identifyFile(e.target.result, null, null, filename, mimetype);
+					var result = Fidoo.identifyFile(e.target.result, filename, mimetype, null, null);
 					write("result", "<pre>" + JSON.stringify(result, null, " ") + "</pre>");
 				}
 				catch(error) {

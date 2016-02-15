@@ -2,7 +2,15 @@ Fidoo
 =====
 
 Format Identification of Digital Objects Online
------  
+-----
+
+A javascript library to determine the file-type and version of a file.
+
+Fidoo can be used to check file-types before uploading or as a node.js app to analyse files on a file-system.
+
+Fidoo uses a trimmed down and modified  [FIDO](https://github.com/openpreserve/fido/) signature version of [PRONOM](http://www.nationalarchives.gov.uk/pronom/) signature files.
+
+Demo: <http://www.techmaurice.com/fidoo/>
 
 ### Fidoo is a file format identification library
 Although the example node.js app and web app that go with the library work as expected, Fidoo is not a turn-key app but a file format identification library written in Javascript. Fidoo supports implementation in both node.js and webbased HTML5 applications. 
@@ -20,13 +28,15 @@ In node.js you can use both synchronous and asynchronous functions to read files
 If you load `fidoo-core.js`, Fidoo is ready for use, after loading its configuration and signature files automatically.
 
 Although Fidoo contains multiple functions, there is only one you should use:
-`Fidoo.identifyFile(**binarystream**, **matchingMethod** (strict/relaxed), **disablePriority** (true/false), [, [**filename**], [**mimetype]])` 
-  
+
+`Fidoo.identifyFile(**binarystream** [[, **matchingMethod** (strict/relaxed)] [, **disablePriority** (true/false)] [, **filename**] [, **mimetype]])` 
 which returns a Javascript object. 
 
 Arguments matchingMethod and disablePriority are optional and default to what is configured. 
+If matchingMethod is "strict", matching PUIDs are only returned when _all_ matches are satisfied for that particular signature (eg. BOF or BOF + EOF or VAR or BOF + VAR or BOF +  VAR + EOF, or a variation thereof).
+If matchingMethod is "relaxed", matching PUIDs are returned if only BOF matches.
 
-Arguments filename and mimetype are optional, but if these are supplied you will get a richer resultset returned with information about the extension and mimetype.
+Arguments filename and mimetype are optional, but if these are supplied you will get a richer resultset returned with information about the file extension and mimetype.
 
 #### Runtime options
 Before each call to `Fidoo.identifyFile` you can change configuration, for example to first perform "strict" identification of a file and successively a "relaxed" identification. Also you can enable or disable "priority override" at will, or one or both while calling `Fidoo.identifyFile`.
