@@ -63,14 +63,17 @@
 
 <p>If you load <code>fidoo-core.js</code>, Fidoo is ready for use, after loading its configuration and signature files automatically.</p>
 
-<p>Although Fidoo contains multiple functions, there is only one you should use:
-<code>Fidoo.identifyFile(**binarystream**, **matchingMethod** (strict/relaxed), **disablePriority** (true/false), [, [**filename**], [**mimetype]])</code> </p>
+<p>Although Fidoo contains multiple functions, there is only one you should use:</p>
+
+<p><code>Fidoo.identifyFile(**binarystream** [[, **matchingMethod** (strict/relaxed)] [, **disablePriority** (true/false)] [, **filename**] [, **mimetype]])</code> </p>
 
 <p>which returns a Javascript object. </p>
 
-<p>Arguments matchingMethod and disablePriority are optional and default to what is configured. </p>
+<p>Arguments matchingMethod and disablePriority are optional and default to what is configured. 
+If matchingMethod is "strict", matching PUIDs are only returned when <em>all</em> matches are satisfied for that particular signature (eg. BOF or BOF + EOF or VAR or BOF + VAR or BOF +  VAR + EOF, or a variation thereof).
+If matchingMethod is "relaxed", matching PUIDs are returned if only BOF matches.</p>
 
-<p>Arguments filename and mimetype are optional, but if these are supplied you will get a richer resultset returned with information about the extension and mimetype.</p>
+<p>Arguments filename and mimetype are optional, but if these are supplied you will get a richer resultset returned with information about the file extension and mimetype.</p>
 
 <h4>
 <a id="runtime-options" class="anchor" href="#runtime-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Runtime options</h4>
