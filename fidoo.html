@@ -93,6 +93,15 @@ function showResult(that) {
 	}
 
 function readFileAndIdentify(fileObject, filename) {
+	var matchingMethod = "strict";
+	if(document.getElementById("matchingMethodRelaxed").checked == true) {
+		matchingMethod = "relaxed";
+		}
+	else {
+		matchingMethod = "strict";
+		}
+	var priorityOverride = false;
+	priorityOverride = document.getElementById("priorityOverride").checked;
 	for(var i = 0, file; file = files[i]; i++) {
 		var search = escape(file.name);
 		var mimetype = file.type;
@@ -101,7 +110,7 @@ function readFileAndIdentify(fileObject, filename) {
 			var fileReader = new FileReader();
 			fileReader.onload = function(e) {
 				try {
-					var result = Fidoo.identifyFile(e.target.result, filename, mimetype, null, null);
+					var result = Fidoo.identifyFile(e.target.result, filename, mimetype, matchingMethod, priorityOverride);
 					write("result", "<pre>" + JSON.stringify(result, null, " ") + "</pre>");
 				}
 				catch(error) {
@@ -132,9 +141,13 @@ function readFileAndIdentify(fileObject, filename) {
 </head>
 <body>
 <h1>Fidoo - Format Identification of Digital Objects Online</h1>
-<h2>Lib version 0.0.2 - demo browser app</h2>
+<h2>Lib version 0.1.0 - demo browser app</h2>
 <hr />
 Select one or more files: <button id="browse">Browse files</button> <input type="file" name="files[]" id="files" multiple />
+<hr />
+Matching method: <label>strict: <input type="radio" name="matchingMethod" id="matchingMethodStrict" value="strict" checked /></label> or  <label>relaxed: <input type="radio" name="matchingMethod" id="matchingMethodRelaxed" value="relaxed" /></label> [<a href="https://github.com/techmaurice/fidoo/blob/master/DOCUMENTATION.md" title="Documentation">&#128161;</a>]
+<hr />
+<label>Disable priority override: <input type="checkbox" name="priorityOverride" id="priorityOverride" value="enable" /></label> [<a href="https://github.com/techmaurice/fidoo/blob/master/DOCUMENTATION.md" title="Documentation">&#128161;</a>]
 <hr />
 <h3>Files</h3>
 <div id="fileList">none</div>
