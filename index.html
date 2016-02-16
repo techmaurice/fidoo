@@ -96,6 +96,10 @@ This happens when you pass an object instead of a string.</p>
 <p><code>Fidoo.identifyFile expects binaryString to be a string</code>
 This happens when you pass "something" else (eg. null, false) instead of a string.</p>
 
+<p><code>EACCES: permission denied</code>, <code>ENOENT</code>, <code>E...</code>, etc ...
+This happens if there is no permission to open a file, the file is not found, or some other unspecified file error. 
+Please note that these kind of file errors are emitted by node.js, not Fidoo itself, as Fidoo is not able to read files.</p>
+
 <p>Possible warnings:
 <code>empty binaryString</code>
 This happens when the string is empty (ie. maybe an empty file).</p>
@@ -103,14 +107,14 @@ This happens when the string is empty (ie. maybe an empty file).</p>
 <h3>
 <a id="example-app-usage" class="anchor" href="#example-app-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example app: usage</h3>
 
-<p>The Fidoo example app <code>fidoo.js</code> expects a plain text file with filenames (e.g. /path/to/file.txt) with one file per line and outputs a json file with results.</p>
+<p>The Fidoo example app <code>fidoo-cli.js</code> expects a plain text file with filenames (e.g. /path/to/file.txt) with one file per line and outputs a json file with results.</p>
 
-<p><code>node fidoo.js -input=~/fidoo_files.txt -output=~/fidoo_output.json</code></p>
+<p><code>node fidoo-cli.js -inputfile=~/fidoo_files.txt -outputfile=~/fidoo_output.json</code></p>
 
 <p>Use quotes around filenames with spaces, like this:
-<code>node fidoo.js -input=~/fidoo_files.txt -output="~/fidoo output.json"</code></p>
+<code>node fidoo-cli.js -inputfile=~/fidoo_files.txt -outputfile="~/fidoo outputfile.json"</code></p>
 
-<p>Please note that all "logic" for reading and writing files is done in <code>fidoo.js</code> and not in the library <code>fidoo-core.js</code>. If you want to extend or change the app, please only do so in <code>fidoo.js</code>. It would be cool if you commit any offspring to the Fidoo repository on GitHub, so it can be incorporated as example. Give it a unique name (e.g. <code>fidoo-yourname.js</code> and push it to the main branch of Fidoo. Don't forget your documentation ;)</p>
+<p>Please note that all "logic" for reading and writing files is done in <code>fidoo-cli.js</code> and not in the library <code>fidoo-core.js</code>. If you want to extend or change the app, please only do so in <code>fidoo-cli.js</code>. It would be cool if you commit any offspring to the Fidoo repository on GitHub, so it can be incorporated as example. Give it a unique name (e.g. <code>fidoo-yourname.js</code> and push it to the main branch of Fidoo. Don't forget your documentation ;)</p>
 
 <h3>
 <a id="fidoo-global-object-variables-and-arrays" class="anchor" href="#fidoo-global-object-variables-and-arrays" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fidoo global object variables and arrays</h3>
