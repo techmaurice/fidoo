@@ -161,10 +161,10 @@ function processArguments() {
 			}
 		if(val.indexOf('=') !== -1) {
 			val = val.split("=");
-			if(val[0] === "-input") {
+			if(val[0] === "-inputfile") {
 				inputFile = val[1];
 				}
-			if(val[0] === "-output") {
+			if(val[0] === "-outputfile") {
 				outputFile = val[1];
 				}
 			}
@@ -182,12 +182,12 @@ function processArguments() {
 }
 
 function showUsage() {
-	console.log("Usage: node index.js -input=files.txt -output=output.json");
-	console.log("More options available, see DOCUMENTATION.md");
+	console.log("Usage: node fidoo-cli.js -inputfile=files.txt -outputfile=output.json");
+	console.log("For more information, see DOCUMENTATION.md");
 	}
 
 function showVersion() {
-	console.log("Fidoo version v" + fidoo.libVersion + " using PRONOM/FIDO signatures v" + fidoo.pronomSignatureVersion);
+	console.log("Fidoo-cli using Fidoo library v" + fidoo.libVersion + " using PRONOM/FIDO signatures v" + fidoo.pronomSignatureVersion);
 	}
 
 if (require.main === module) {
