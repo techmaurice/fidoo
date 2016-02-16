@@ -49,6 +49,7 @@ var maxFiles = 250;
 window.onload = function() { 
 	 document.getElementById("files").addEventListener("change", handleFileSelect);
 	 document.getElementById("browse").addEventListener("click", function() {document.getElementById("files").click();});
+	 document.getElementById("libVersion").innerHTML = Fidoo.libVersion;
 	 }
 function write(element, content) {
 	document.getElementById(element).innerHTML = content;
@@ -84,7 +85,9 @@ function handleFileSelect(evt) {
 function showResult(that) {
 	var anchors = document.getElementsByTagName("span");
 	for(var i = 0; i < anchors.length; i++) {
-		anchors[i].className = "link";
+		if(anchors[i].id != "libVersion") {
+			anchors[i].className = "link";
+			}
 		}
 	that.className = "clickLink";
 	var filename = escape(that.textContent);
@@ -111,14 +114,14 @@ function readFileAndIdentify(fileObject, filename) {
 			fileReader.onload = function(e) {
 				try {
 					var result = Fidoo.identifyFile(e.target.result, filename, mimetype, matchingMethod, priorityOverride);
-					write("result", "<pre>" + JSON.stringify(result, null, " ") + "</pre>");
+					write("result", "" + JSON.stringify(result, null, " "));
 				}
 				catch(error) {
-					write("result", "<pre>Could not read '" + filename + "': " + error + ": " + error + "</pre>");
+					write("result", "Could not read '" + filename + "': " + error + ": " + error);
 					}
 			};
 			fileReader.onerror = function(error) {
-				write("result", "<pre>Could not read '" + filename + "': " + error.target.error.name + ": " + error.target.error.message + "</pre>");
+				write("result", "<pre>Could not read '" + filename + "': " + error.target.error.name + ": " + error.target.error.message);
 			};
 			fileReader.readAsBinaryString(file);
 			return true;
@@ -141,7 +144,7 @@ function readFileAndIdentify(fileObject, filename) {
 </head>
 <body>
 <h1>Fidoo - Format Identification of Digital Objects Online</h1>
-<h2>Lib version 0.1.0 - demo browser app</h2>
+<h2>Library version <span id="libVersion">?</span> - demo browser app</h2>
 <hr />
 Select one or more files: <button id="browse">Browse files</button> <input type="file" name="files[]" id="files" multiple />
 <hr />
@@ -153,7 +156,7 @@ Matching method: <label>strict: <input type="radio" name="matchingMethod" id="ma
 <div id="fileList">none</div>
 <hr />
 <h3>Info</h3>
-<div id="result"><pre>Browse one or more files and click on the name</pre></div>
+<div id="result_holder"><pre id="result">Browse one or more files and click on the name</pre></div>
 <hr />
 <h5>TechMaurice 2016</h5>
 </body>
