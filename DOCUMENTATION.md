@@ -145,9 +145,9 @@ console.dir(Fidoo.mimePuidMapJSON);
  node.js: 
 ```javascript
 var Fidoo = module.Fidoo; 
-Fidoo.dumpObject(fidoo.pronomSignatures); 
-Fidoo.dumpObject(fidoo.extensionPuidMap); 
-Fidoo.dumpObject(fidoo.mimePuidMap); 
+Fidoo.dumpObject(Fidoo.pronomSignatures); 
+Fidoo.dumpObject(Fidoo.extensionPuidMap); 
+Fidoo.dumpObject(Fidoo.mimePuidMap); 
 ```
 
 ### License
