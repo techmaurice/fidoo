@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="UTF-8">
-<title>Fidoo Lib Demo - Format Identification of Digital Objects Online</title>
+<title>Fidoo Library Demo - Format Identification of Digital Objects Online</title>
 <script type="text/javascript" src="lib/fidoo-setup.js"></script>
 <script type="text/javascript" src="lib/fidoo-core.js"></script>
 <style>
@@ -50,6 +50,7 @@ window.onload = function() {
 	 document.getElementById("files").addEventListener("change", handleFileSelect);
 	 document.getElementById("browse").addEventListener("click", function() {document.getElementById("files").click();});
 	 document.getElementById("libVersion").innerHTML = Fidoo.libVersion;
+	 document.getElementById("pronomSignatureVersion").innerHTML = Fidoo.pronomSignatureVersion;
 	 }
 function write(element, content) {
 	document.getElementById(element).innerHTML = content;
@@ -85,7 +86,7 @@ function handleFileSelect(evt) {
 function showResult(that) {
 	var anchors = document.getElementsByTagName("span");
 	for(var i = 0; i < anchors.length; i++) {
-		if(anchors[i].id != "libVersion") {
+		if(anchors[i].id != "libVersion" || anchors[i].id != "pronomSignatureVersion") {
 			anchors[i].className = "link";
 			}
 		}
@@ -144,7 +145,7 @@ function readFileAndIdentify(fileObject, filename) {
 </head>
 <body>
 <h1>Fidoo - Format Identification of Digital Objects Online</h1>
-<h2>Library version <span id="libVersion">?</span> - demo browser app</h2>
+<h2>Demo browser app using Fidoo library version <span id="libVersion">?</span> with PRONOM/FIDO signatures version <span id="pronomSignatureVersion">?</span></h2>
 <hr />
 Select one or more files: <button id="browse">Browse files</button> <input type="file" name="files[]" id="files" multiple />
 <hr />

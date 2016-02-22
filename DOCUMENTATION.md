@@ -4,16 +4,20 @@ Fidoo
 Format Identification of Digital Objects Online
 -----
 
+<h3 style="color: red;"></h3>
+
 A javascript library to determine the file-type and version of a file.
 
 Fidoo can be used to check file-types before uploading or as a node.js app to analyse files on a file-system.
 
 Fidoo uses a trimmed down and modified  [FIDO](https://github.com/openpreserve/fido/) signature version of [PRONOM](http://www.nationalarchives.gov.uk/pronom/) signature files.
 
-Demo: <http://www.techmaurice.com/fidoo/>
+Project demo: <https://rawgit.com/techmaurice/fidoo/master/fidoo-web.html>
+
+"Fancy" demo: <http://www.techmaurice.com/fidoo/>
 
 ### Fidoo is a file format identification library
-Although the example node.js app and web app that go with the library work as expected, Fidoo is not a turn-key app but a file format identification library written in Javascript. Fidoo supports implementation in both node.js and webbased HTML5 applications. 
+Although the example node.js app and web app which are included with this repository work as expected, Fidoo is not a turn-key app but a file format identification library written in Javascript. Fidoo supports implementation in both node.js and webbased HTML5 applications. 
 
 Fidoo only has one function, that is to identify the format of files and offers no support to read or write files, except reading its own configuration and signature-files. It is up to you how you supply the binary content of files to Fidoo to analyse the format and what to do with the results. 
 
@@ -24,12 +28,15 @@ Fidoo is executed synchronous. You supply a binary string and get a Javascript o
 
 In node.js you can use both synchronous and asynchronous functions to read files, although asynchronous reading is recommended as it prevents application blocking and yields better performance due to the internal workings of node.js. The downside of asynchronous reading is you have to keep track of results using events and/or callbacks instead of waiting for them synchronously.
 
+Also with asynchronous reading in node.js you need to keep a keen eye on how many files are opened at one time, and more important, close the file descriptors. If you run out of file descriptors, node.js will give up. 
+Of course you can enlarge the number of file descriptors (look it up for you particular OS) but it is better to close them as you should.
+
 ### Fidoo functions
 If you load `fidoo-core.js`, Fidoo is ready for use, after loading its configuration and signature files automatically.
 
 Although Fidoo contains multiple functions, there is only one you should use:
 
-`Fidoo.identifyFile(**binarystream** [[, **matchingMethod** (strict/relaxed)] [, **disablePriority** (true/false)] [, **filename**] [, **mimetype]])` 
+`Fidoo.identifyFile(**binarystream** [[, **filename**] [, **mimetype] [, **matchingMethod** (strict/relaxed)] [, **disablePriority** (true/false)]])` 
 which returns a Javascript object. 
 
 Arguments matchingMethod and disablePriority are optional and default to what is configured. 
@@ -46,6 +53,18 @@ Fidoo returns a resultset depending on configuration, and if you supplied the fi
 
 Two main object arrays are passed back in the resultset: "result", "warning" and "error".
 
+Example resultset:
+		PUID (ex. fmt/43) is an array with the following keys per result:
+			pronomSignaturename: Pronom signature name, ex. "JFIF 1.01" (string)
+			pronomFormatName: Format name, ex. "JPEG File Interchange Format" (string)
+			pronomFormatVersion: Format version, ex. "1.01" (string)
+			pronomMimetypes: Mime type, ex. "image/jpeg" (array)
+			pronomContentType:	Content type, ex. "Image (Raster)" (string)
+			pronomAppleUid: Apple UID, ex. "public.jpeg" (string)
+			pronomHasPriorityOver:	PUID , ex. "fmt/41" (array)
+			matchtypes:	"bof", "eof", "var" (array)
+			score:	"bof", "eof", "var" (array)
+
 Possible errors:
 `Fidoo.identifyFile expects at least one argument: binaryString (type: string)`
 This happens when you call Fidoo.identifyFile without arguments
@@ -58,7 +77,7 @@ This happens when you pass "something" else (eg. null, false) instead of a strin
 
 `EACCES: permission denied`, `ENOENT`, `E...`, etc ...
 This happens if there is no permission to open a file, the file is not found, or some other unspecified file error. 
-Please note that these kind of file errors are emitted by node.js, not Fidoo itself, as Fidoo is not able to read files.
+Please note that these kind of file errors are emitted by node.js, not Fidoo itself, as Fidoo does not read files.
 
 Possible warnings:
 `empty binaryString`
@@ -80,33 +99,24 @@ For all changes goes: *Danger, Will Robinson*!
 
 It is therefore recommended to ONLY alter the variables available in fidoo-setup.js. This setup file is loaded before any action is performed, but after the initial variables are loaded in the library. If the setup file is missing, this is silently ignored. This gives the advantage Fidoo will always run, but for node.js it also implies you can use different  settings with a single installation by rewriting or deleting the setup file.
 
-		checkJSON: [],
-		chunkSize: 4096, // raw bytes
-		debug: true,
-		extensionPuidMap: {},
-		extensionPuidMapJSON: "extensionPuidMap-v84-0.json",
-		fidooSignatureFixesJSON: "fidooSignatureFixes-v84-0.json",
-		libVersion: "0.0.2",
-		matchingMethod: "strict",
-		mimePuidMap: {},
-		mimePuidMapJSON: "mimePuidMap-v84-0.json",
-		nodeJSONUri: "../json/",
-		disablePriority: false,
-		pronomSignatures: {},
-		pronomSignaturesJSON: "pronomSignatures-v84-0.json",
-		pronomSignatureVersion: 84,
-		rawGitUrl: "https://cdn.rawgit.com/techmaurice/fidoo/master/json/",
-		regexesMap: {},
-		runningNodeJS: typeof process !== "undefined",
-		signaturesLoaded: false,
+### Fidoo functions
 
-### Fidoo Object functions
+The `Fidoo` object is static and saves no results. The function `identifyFile` returns a result set as an array (see above).
 
 #### Browser
-TBA
+If you load fidoo-core.js with a script tag in a browser, call `identifyFile` from the automatically available global variable Fidoo.
+
+```javascript
+var resultArray = Fidoo.identifyFile(**binarystream** [[, **filename**] [, **mimetype**] [, **matchingMethod** ("strict"/"relaxed")] [, **disablePriority** (true/false)]])
+```
 
 #### node.js
-TBA
+If you load fidoo-core.js (by using require) into a global variable in node.js, Fidoo is automatically `exported` to that variable.
+
+```javascript
+var Fidoo = require("./lib/fidoo-core.js");
+var resultArray = Fidoo.identifyFile(**binarystream** [[, **filename**] [, **mimetype**] [, **matchingMethod** ("strict"/"relaxed")] [, **disablePriority** (true/false)]])
+```
 
 ### File Format Signature Data Objects
 Objects in memory you can use in your own browser or node app:
@@ -134,10 +144,10 @@ console.dir(Fidoo.mimePuidMapJSON);
 
  node.js: 
 ```javascript
-var fidoo = module.Fidoo; 
-fidoo.dumpObject(fidoo.pronomSignatures); 
-fidoo.dumpObject(fidoo.extensionPuidMap); 
-fidoo.dumpObject(fidoo.mimePuidMap); 
+var Fidoo = module.Fidoo; 
+Fidoo.dumpObject(fidoo.pronomSignatures); 
+Fidoo.dumpObject(fidoo.extensionPuidMap); 
+Fidoo.dumpObject(fidoo.mimePuidMap); 
 ```
 
 ### License
