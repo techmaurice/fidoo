@@ -1,0 +1,127 @@
+{
+ "result": {
+  "matchingMethod": "strict",
+  "disablePriority": "false",
+  "signatureMatches": {
+   "fmt/18": [
+    {
+     "pronomSignaturename": "PDF 1.4",
+     "pronomFormatName": "Acrobat PDF 1.4 - Portable Document Format",
+     "pronomFormatVersion": "1.4",
+     "pronomMimetypes": "application/pdf",
+     "pronomContentType": "Page Description",
+     "pronomAppleUid": "com.adobe.pdf",
+     "pronomHasPriorityOver": [
+      "fmt/14",
+      "fmt/15",
+      "fmt/16",
+      "fmt/17"
+     ],
+     "matchtypes": [
+      "bof",
+      "eof"
+     ],
+     "score": [
+      "bof",
+      "eof"
+     ]
+    }
+   ],
+   "fmt/43": [
+    {
+     "pronomSignaturename": "JFIF 1.01",
+     "pronomFormatName": "JPEG File Interchange Format",
+     "pronomFormatVersion": "1.01",
+     "pronomMimetypes": "image/jpeg",
+     "pronomContentType": "Image (Raster)",
+     "pronomAppleUid": "public.jpeg",
+     "pronomHasPriorityOver": [
+      "fmt/41"
+     ],
+     "matchtypes": [
+      "bof",
+      "eof"
+     ],
+     "score": [
+      "bof",
+      "eof"
+     ]
+    }
+   ]
+  },
+  "extension": "pdf",
+  "extensionPuids": [
+   "fmt/14",
+   "fmt/15",
+   "fmt/16",
+   "fmt/17",
+   "fmt/18",
+   "fmt/19",
+   "fmt/20",
+   "fmt/95",
+   "fmt/144",
+   "fmt/145",
+   "fmt/146",
+   "fmt/147",
+   "fmt/148",
+   "fmt/157",
+   "fmt/158",
+   "fmt/276",
+   "fmt/354",
+   "fmt/476",
+   "fmt/477",
+   "fmt/478",
+   "fmt/479",
+   "fmt/480",
+   "fmt/481",
+   "fmt/488",
+   "fmt/489",
+   "fmt/490",
+   "fmt/491",
+   "fmt/492",
+   "fmt/493",
+   "fmt/558",
+   "fmt/559",
+   "fmt/560",
+   "fmt/561",
+   "fmt/562",
+   "fmt/563",
+   "fmt/564",
+   "fmt/565"
+  ],
+  "mimetype": "application/pdf",
+  "mimetypePuids": [
+   "fmt/14",
+   "fmt/15",
+   "fmt/16",
+   "fmt/17",
+   "fmt/18",
+   "fmt/19",
+   "fmt/20",
+   "fmt/95",
+   "fmt/144",
+   "fmt/145",
+   "fmt/146",
+   "fmt/147",
+   "fmt/148",
+   "fmt/157",
+   "fmt/158",
+   "fmt/276",
+   "fmt/354",
+   "fmt/476",
+   "fmt/477",
+   "fmt/478",
+   "fmt/479",
+   "fmt/480",
+   "fmt/481",
+   "fmt/488",
+   "fmt/489",
+   "fmt/490",
+   "fmt/491",
+   "fmt/492",
+   "fmt/493"
+  ]
+ },
+ "warning": "",
+ "error": ""
+}

@@ -53,17 +53,21 @@ Fidoo returns a resultset depending on configuration, and if you supplied the fi
 
 Two main object arrays are passed back in the resultset: "result", "warning" and "error".
 
-Example resultset:
+Resultset structure:
 		PUID (ex. fmt/43) is an array with the following keys per result:
 			pronomSignaturename: Pronom signature name, ex. "JFIF 1.01" (string)
 			pronomFormatName: Format name, ex. "JPEG File Interchange Format" (string)
 			pronomFormatVersion: Format version, ex. "1.01" (string)
-			pronomMimetypes: Mime type, ex. "image/jpeg" (array)
+			pronomMimetypes: Mime type, ex. "image/jpeg" (string or array when multiple) // Needs fix
 			pronomContentType:	Content type, ex. "Image (Raster)" (string)
 			pronomAppleUid: Apple UID, ex. "public.jpeg" (string)
 			pronomHasPriorityOver:	PUID , ex. "fmt/41" (array)
 			matchtypes:	"bof", "eof", "var" (array)
 			score:	"bof", "eof", "var" (array)
+
+
+[Example result](https://cdn.rawgit.com/techmaurice/fidoo/master/json/example_result_pdf.json) of the file [embedded-png.pdf](https://cdn.rawgit.com/openpreserve/format-corpus/97a8bf726d56106f3d7e5c8c481e26da7f5cc86e/office-examples/OpenOffice.org%203.2.0%20OSX/embeds/embedded-png.pdf) from the OPF format-corpus.
+
 
 Possible errors:
 `Fidoo.identifyFile expects at least one argument: binaryString (type: string)`
