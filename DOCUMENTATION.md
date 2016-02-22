@@ -36,17 +36,20 @@ If you load `fidoo-core.js`, Fidoo is ready for use, after loading its configura
 
 Although Fidoo contains multiple functions, there is only one you should use:
 
-`Fidoo.identifyFile(**binarystream** [[, **filename**] [, **mimetype] [, **matchingMethod** (strict/relaxed)] [, **disablePriority** (true/false)]])` 
+```javascript
+Fidoo.identifyFile(**binarystream** [[, **filename**] [, **mimetype**] [, **matchingMethod** ("strict"/"relaxed")] [, **disablePriority** (true/false)]])
+```
 which returns a Javascript object. 
 
 Arguments matchingMethod and disablePriority are optional and default to what is configured. 
-If matchingMethod is "strict", matching PUIDs are only returned when _all_ matches are satisfied for that particular signature (eg. BOF or BOF + EOF or VAR or BOF + VAR or BOF +  VAR + EOF, or a variation thereof).
+If matchingMethod is "strict", matching PUIDs are only returned when _all_ matches are satisfied for that particular signature (BOF or BOF + EOF or BOF + VAR or BOF +  VAR + EOF).
 If matchingMethod is "relaxed", matching PUIDs are returned if only BOF matches.
 
 Arguments filename and mimetype are optional, but if these are supplied you will get a richer resultset returned with information about the file extension and mimetype.
 
 #### Runtime options
 Before each call to `Fidoo.identifyFile` you can change configuration, for example to first perform "strict" identification of a file and successively a "relaxed" identification. Also you can enable or disable "priority override" at will, or one or both while calling `Fidoo.identifyFile`.
+You can also call `identifyFile` with different options, see usage.
 
 #### Resultset
 Fidoo returns a resultset depending on configuration, and if you supplied the filename and/or mimetype. Because the resultset is a Javascript object, you can easily modify or enhance it, save it as a JSON file or insert it into a JSON database.
