@@ -42,8 +42,9 @@ Fidoo.identifyFile(**binarystream** [[, **filename**] [, **mimetype**] [, **matc
 which returns a Javascript object. 
 
 Arguments matchingMethod and disablePriority are optional and default to what is configured. 
-If matchingMethod is "strict", matching PUIDs are only returned when _all_ matches are satisfied for that particular signature (BOF or BOF + EOF or BOF + VAR or BOF +  VAR + EOF).
-If matchingMethod is "relaxed", matching PUIDs are returned if only BOF matches.
+If matchingMethod is "strict", matching PUIDs are only returned when _all_ matches are satisfied for that particular signature (BOF or BOF + EOF or BOF + VAR or BOF +  VAR + EOF). 
+
+If matchingMethod is "relaxed", matching PUIDs are returned if at least BOF matches.
 
 Arguments filename and mimetype are optional, but if these are supplied you will get a richer resultset returned with information about the file extension and mimetype.
 
@@ -104,7 +105,7 @@ Please note that all "logic" for reading and writing files is done in `fidoo-cli
 Can be altered directly in the library, via fidoo-setup.js or during runtime by changing the variables, for example: `fidoo.debug = false;`.
 For all changes goes: *Danger, Will Robinson*! 
 
-It is therefore recommended to ONLY alter the variables available in fidoo-setup.js. This setup file is loaded before any action is performed, but after the initial variables are loaded in the library. If the setup file is missing, this is silently ignored. This gives the advantage Fidoo will always run, but for node.js it also implies you can use different  settings with a single installation by rewriting or deleting the setup file.
+It is therefore recommended to ONLY alter the variables available in fidoo-setup.js. This setup file is loaded before any action is performed, but after the initial variables are loaded in the library. If the setup file is missing, this is silently ignored, except when debug is enabled. This gives the advantage Fidoo will always run, but for node.js it also implies you can use different  settings with a single installation by rewriting or deleting the setup file.
 
 ### Fidoo functions
 

@@ -10,8 +10,11 @@
 // the app would possibly be much faster,
 // but then we would end up in callback hell
 // and possibly run out of file descriptors (aka `EMFILE errno 20`)
+// if we do not control that too
 
-var fidoo = require("./lib/fidoo-core.js");
+var appVersion = "0.1.0";
+
+var Fidoo = require("./lib/fidoo-core.js");
 var fs = require("fs");
 var maxFileSize = (1024 * 1024) * 32; // MB
 var splitChunkSize = (1024 * 1024) * 1; // MB
@@ -35,30 +38,33 @@ function identifyFiles() {
 		var filenames = fs.readFileSync(inputFile, "utf-8").trim().split("\n");
 		}
 	catch(error) { // TODO more catching
-		console.error(error);
+		process.stderr.write(error + "\n");
 		process.exit(0);
 		}
 	if(filenames.length == 0) {
-		console.error(inputFile + " is empty");
+		process.stderr.write(inputFile + " is empty\n");
 		process.exit(0);
 		}
 	try { // touch to test outputFile
 		fs.closeSync(fs.openSync(outputFile, "w"));
 		}
 	catch(error) { // TODO more catching
-		console.error(error);
+		process.stderr.write(error + "\n");
 		process.exit(0);
 		}
 	var start = new Date().getTime();
 	var i = 0;
 	var count = 0;
+	var overwrite = Array(80).join(" ");
 	filenames.forEach(function(filename, index, array) {
 		i++;
 		count++;
-		console.log("Identifying: " + filename);
+		var truncatedFilename = truncateFilename(filename, 54);
+		process.stdout.write(overwrite + "\r");
+		process.stdout.write("Identifying: " + truncatedFilename + "\r");
 		try {
 			// here we call Fidoo
-			results[filename] = fidoo.identifyFile(chunkFile(filename), filename, "", null, null);
+			results[filename] = Fidoo.identifyFile(chunkFile(filename), filename, "", null, null);
 			}
 		catch(error) {
 			// this can happen when a file is too big (> several 100 MB)
@@ -94,7 +100,7 @@ function identifyFiles() {
 				fs.appendFileSync(outputFile, results, encoding="utf8");
 				}
 			catch(error) { // TODO more catching
-				console.error(error);
+				process.stderr.write(error + "\n");
 				process.exit(0);
 				}
 			results = {};
@@ -107,7 +113,8 @@ function identifyFiles() {
 		var duration = new Date(null);
 		duration.setSeconds(seconds); 
 		duration = duration.toISOString().substr(11, 8);
-		console.log("Identified " + filenames.length + " files in " + duration + " (" + numFilesSecond + " files/second)");
+		process.stdout.write(overwrite + "\r");
+		process.stdout.write("\rIdentified " + filenames.length + " files in " + duration + " (" + numFilesSecond + " files/second)\n");
 	}
 
 function chunkFile(filename) {
@@ -148,6 +155,31 @@ function chunkFile(filename) {
 		}
 	}
 
+
+function truncateFilename(s, len) {
+    if(s.length <= len) {
+        return s;
+    }
+    var lastIndex = s.lastIndexOf(".");
+    if(lastIndex == -1) {
+    	lastIndex = 0;
+    	}
+    var ext = s.substring(lastIndex + 1, s.length).toLowerCase();
+    if(ext.length > 4) {
+    	if(ext.length > len) {
+    		// needs fixing because of call stack exceeding
+    		// if extension > len
+    		// happens with Apple Spotlight files having
+    		// long UUID's and muck
+    		ext = truncateFilename("." + ext, len);
+    		}
+    	len = (len - ext.length);
+    	}
+    var filename = s.replace('.' + ext,'');
+    filename = filename.substr(0, len) + (s.length > len ? '[...]' : '');
+    return filename + '.' + ext;
+};
+
 function processArguments() {
 	if(process.argv.length === 2) {
 		showVersion();
@@ -170,11 +202,13 @@ function processArguments() {
 			}
 	});
 	if(inputFile !== "" && outputFile !== "") {
-		console.log("Using filelist from '" + inputFile + "', outputting to '" + outputFile + "'");
+		showVersion();
+		process.stdout.write("Using filelist from '" + inputFile + "', outputting to '" + outputFile + "'\n");
 		return true;
 		}
 	else {
-		console.error("Error: empty or invalid arguments");
+		process.stderr.write("Error: empty or invalid arguments\n");
+		showVersion();
 		showUsage();
 		process.exit(0);
 		}
@@ -182,12 +216,12 @@ function processArguments() {
 }
 
 function showUsage() {
-	console.log("Usage: node fidoo-cli.js -inputfile=files.txt -outputfile=output.json");
-	console.log("For more information, see DOCUMENTATION.md");
+	process.stdout.write("Usage: node fidoo-cli.js -inputfile=files.txt -outputfile=output.json\n");
+	process.stdout.write("For more information, see DOCUMENTATION.md\n");
 	}
 
 function showVersion() {
-	console.log("Fidoo-cli using Fidoo library v" + fidoo.libVersion + " using PRONOM/FIDO signatures v" + fidoo.pronomSignatureVersion);
+	process.stdout.write("Fidoo-cli demo app version " + appVersion + " by Maurice de Rooij\nUsing Fidoo library version " + Fidoo.libVersion + " with PRONOM/FIDO signatures version " + Fidoo.pronomSignatureVersion + "\n");
 	}
 
 if (require.main === module) {
