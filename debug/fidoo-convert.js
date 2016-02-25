@@ -1,18 +1,13 @@
 /*
-fidoo-convert.js for debugging and converting signatures
-does not work with current version
-needs a bit of love
+fidoo-convert.js for converting signatures
+works, but needs cleaning up
 */
 
-var extMap, puidToSigMap, extToSigMap, mimeTopuidToSigMap = new Object;
-var formats = pronomSignaturesXML.formats.format;
-
-function puidsToSignaturesMapping() {
+function puidsToSignaturesMapping(signature) {
+	var formats = signature.formats.format;
 	var puidToSigMap = new Object;
 	var idToPuidMap = new Object;
 	var puidToIdMap = new Object;
-// 		alert(formats);
-// 		return;
 	for (var format in formats) {
 		if (formats.hasOwnProperty(format)) {
 			puidToSigMap[formats[format].puid] = {};
@@ -32,7 +27,7 @@ function puidsToSignaturesMapping() {
 			if(formats[format].mime) {
 				puidToSigMap[formats[format].puid].mime = formats[format].mime;
 				}
-			if(formats[format].details.content_type) {
+			if(formats[format].details && formats[format].details.content_type) {
 				puidToSigMap[formats[format].puid].content_type = formats[format].details.content_type;
 				}
 			if(formats[format].apple_uid) {
@@ -67,7 +62,7 @@ function puidsToSignaturesMapping() {
 	// reiterate to map subtypes and supertypes
 	for (var format in formats) {
 		if (formats.hasOwnProperty(format)) {
-			if(formats[format].details.is_subtype_of) {
+			if(formats[format].details && formats[format].details.is_subtype_of) {
 				if(isArray(formats[format].details.is_subtype_of)) {
 					var subtypes = [];
 					for(s = 0; s < formats[format].details.is_subtype_of.length; s++) {
@@ -79,7 +74,7 @@ function puidsToSignaturesMapping() {
 					puidToSigMap[formats[format].puid].is_subtype_of = [idToPuidMap[formats[format].details.is_subtype_of]];
 					}
 				} // end if formats subtype
-			if(formats[format].details.is_supertype_of) {
+			if(formats[format].details && formats[format].details.is_supertype_of) {
 				if(isArray(formats[format].details.is_supertype_of)) {
 					var supertypes = [];
 					for(s = 0; s < formats[format].details.is_supertype_of.length; s++) {
@@ -93,7 +88,6 @@ function puidsToSignaturesMapping() {
 				} // end if formats supertype
 			} // if format property is true
 		} // for format
-	
 	return puidToSigMap;
 	} // end function
 
@@ -133,43 +127,41 @@ function puidsToSignaturesMappingHelper(signature) {
 		return result;
 	} // end function
 
-function mimeToPuidsMapping () {
-var extMap = new Object;
-var formats = pronomSignaturesXML.formats.format;
+function mimeToPuidsMapping(formats) {
+	var mimeMap = new Object;
 	for (var format in formats) {
 		if (formats.hasOwnProperty(format)) {
 			if(isArray(formats[format].mime)) {
 				for(x = 0; x < formats[format].mime.length; x++) {
-					if(!extMap[formats[format].mime[x]]) {
+					if(!mimeMap[formats[format].mime[x]]) {
 						if(!formats[format].mime[x]) {
 							continue;
 							} // formats[format].mime[x] is undefined
 						else {
-							extMap[formats[format].mime[x]] = [];
+							mimeMap[formats[format].mime[x]] = [];
 							} // formats[format].mime[x] is defined
 						} // if mime not in extmap
-				extMap[formats[format].mime[x]].push(formats[format].puid);
+				mimeMap[formats[format].mime[x]].push(format);
 						} // for x
 					} // if isArray mime
 			else {
-				if(!extMap[formats[format].mime]) {
+				if(!mimeMap[formats[format].mime]) {
 					if(!formats[format].mime) {
 						continue;
 						} // formats[format].mime is undefined
 					else {
-						extMap[formats[format].mime] = [];
+						mimeMap[formats[format].mime] = [];
 						} // formats[format].mime is defined
 					} // if mime not in extmap
-				extMap[formats[format].mime].push(formats[format].puid);
+				mimeMap[formats[format].mime].push(format);
 				} // else is single mime
 			} // if format property is true
 		} // for format
-	return extMap;
+	return mimeMap;
 	} // end function
 
-function extensionToPuidsMapping () {
-var extMap = new Object;
-var formats = pronomSignaturesXML.formats.format;
+function extensionToPuidsMapping(formats) {
+	var extMap = new Object;
 	for (var format in formats) {
 		if (formats.hasOwnProperty(format)) {
 			if(isArray(formats[format].extension)) {
@@ -182,7 +174,7 @@ var formats = pronomSignaturesXML.formats.format;
 							extMap[formats[format].extension[x]] = [];
 							} // formats[format].extension[x] is defined
 						} // if extension not in extmap
-				extMap[formats[format].extension[x]].push(formats[format].puid);
+				extMap[formats[format].extension[x]].push(format);
 						} // for x
 					} // if isArray extension
 			else {
@@ -194,9 +186,11 @@ var formats = pronomSignaturesXML.formats.format;
 						extMap[formats[format].extension] = [];
 						} // formats[format].extension is defined
 					} // if extension not in extmap
-				extMap[formats[format].extension].push(formats[format].puid);
+				extMap[formats[format].extension].push(format);
 				} // else is single extension
 			} // if format property is true
 		} // for format
 	return extMap;
 	} // end function
+
+
