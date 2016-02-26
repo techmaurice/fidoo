@@ -12,7 +12,7 @@
 // and possibly run out of file descriptors (aka `EMFILE errno 20`)
 // if we do not control that too
 
-var appVersion = "0.1.0";
+var appVersion = "0.1.1";
 
 var Fidoo = require("./lib/fidoo-core.js");
 var fs = require("fs");
@@ -165,15 +165,11 @@ function truncateFilename(s, len) {
     	lastIndex = 0;
     	}
     var ext = s.substring(lastIndex + 1, s.length).toLowerCase();
+    // ugly hack to prevent overflow of terminal screen
+    // all extensions > 4 characters will be cut off
     if(ext.length > 4) {
-    	if(ext.length > len) {
-    		// needs fixing because of call stack exceeding
-    		// if extension > len
-    		// happens with Apple Spotlight files having
-    		// long UUID's and muck
-    		ext = truncateFilename("." + ext, len);
-    		}
-    	len = (len - ext.length);
+    	ext = ext.substring(0,4) + "[...]";
+    	len = len - 4;
     	}
     var filename = s.replace('.' + ext,'');
     filename = filename.substr(0, len) + (s.length > len ? '[...]' : '');

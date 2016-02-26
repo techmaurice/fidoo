@@ -1,262 +1,266 @@
 {
- "fido-fmt/189.word": {
-  "name": "Microsoft Office Open XML - Word",
-  "extension": "docx",
-  "has_priority_over": [
-   "x-fmt/263",
-   "fmt/189"
-  ],
-  "signatures": [
-   {
-    "name": "Microsoft Office Open XML - Word",
-    "bofregex": "^.{30}\\[Content_Types\\]\\.xml \\xa2",
-    "eofregex": "\\x00\\x00word/.{1,20}\\.xmlPK\\x01\\x02\\x2d.{0,2000}$"
-   }
-  ]
- },
- "fido-fmt/189.xl": {
-  "name": "Microsoft Office Open XML - Excel",
-  "extension": "xlsx",
-  "has_priority_over": [
-   "x-fmt/263",
-   "fmt/189"
-  ],
-  "signatures": [
-   {
-    "name": "Microsoft Office Open XML - Excel",
-    "bofregex": "^.{30}\\[Content_Types\\]\\.xml \\xa2",
-    "eofregex": "\\x00xl/.{1,20}\\.xmlPK\\x01\\x02\\x2d.{0,2000}$"
-   }
-  ]
- },
- "fido-fmt/189.ppt": {
-  "name": "Microsoft Office Open XML - Powerpoint",
-  "extension": "pptx",
-  "has_priority_over": [
-   "x-fmt/263",
-   "fmt/189"
-  ],
-  "signatures": [
-   {
-    "name": "Microsoft Office Open XML - Powerpoint",
-    "bofregex": "^.{30}\\[Content_Types\\]\\.xml \\xa2",
-    "eofregex": "\\x00ppt/.{1,20}\\.xmlPK\\x01\\x02\\x2d.{0,2000}$"
-   }
-  ]
- },
- "fido-fmt/134": {
-  "name": "MPEG 1/2 Audio Layer 3 - fido update",
-  "extension": "mp3",
-  "mime": "audio/mpeg",
-  "signatures": [
-   {
-    "name": "MPEG-1/2 Audio Layer 3",
-    "bofregex": "^ID3",
-    "eofregex": "\\xff[\\xfa\\xfb\\xf2\\xf3][\\x10-\\xeb].{46,1439}\\xff[\\xfa\\xfb\\xf2\\xf3][\\x10-\\xeb].{46,1439}$"
-   }
-  ]
- },
- "fido-x-fmt/384": {
-  "name": "Quicktime",
-  "extension": "mov",
-  "mime": "video/quicktime",
-  "signatures": [
-   {
-    "name": "QuickTime",
-    "bofregex": "^\\x00{3} ftypqt.{0,25}qt.{0,20}moov.{4}mvhd"
-   }
-  ]
- },
- "fido-fmt/40": {
-  "name": "Microsoft Word for Windows Document",
-  "extension": "doc",
-  "mime": "application/msword",
-  "has_priority_over": [
-   "fmt/111"
-  ],
-  "signatures": [
-   {
-    "name": "Microsoft Word for Windows 97 - 2002",
-    "bofregex": "^\\xd0\\xcf\\x11\\xe0\\xa1\\xb1\\x1a\\xe1.{20}\\xfe\\xff",
-    "varregex": "Microsoft (?:Office Word|Word)(?: 8\\.0| 9\\.0| 10\\.0|-Dokument| 97-2003)"
-   }
-  ]
- },
- "fido-fmt/45": {
-  "name": "Rich Text Format",
-  "extension": "rtf",
-  "mime": [
-   "application/rtf",
-   "text/rtf"
-  ],
-  "signatures": [
-   {
-    "name": "RTF 1.0 - 1.4 (generic)",
-    "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
-   }
-  ]
- },
- "fido-fmt/46": {
-  "name": "Rich Text Format",
-  "extension": "rtf",
-  "mime": [
-   "application/rtf",
-   "text/rtf"
-  ],
-  "signatures": [
-   {
-    "name": "RTF 1.0 - 1.4 (generic)",
-    "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
-   }
-  ]
- },
- "fido-fmt/47": {
-  "name": "Rich Text Format",
-  "extension": "rtf",
-  "mime": [
-   "application/rtf",
-   "text/rtf"
-  ],
-  "signatures": [
-   {
-    "name": "RTF 1.0 - 1.4 (generic)",
-    "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
-   }
-  ]
- },
- "fido-fmt/48": {
-  "name": "Rich Text Format",
-  "extension": "rtf",
-  "mime": [
-   "application/rtf",
-   "text/rtf"
-  ],
-  "signatures": [
-   {
-    "name": "RTF 1.0 - 1.4 (generic)",
-    "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
-   }
-  ]
- },
- "fido-fmt/49": {
-  "name": "Rich Text Format",
-  "extension": "rtf",
-  "mime": [
-   "application/rtf",
-   "text/rtf"
-  ],
-  "signatures": [
-   {
-    "name": "RTF 1.0 - 1.4 (generic)",
-    "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
-   }
-  ]
- },
- "fido-fmt/cayra": {
-  "name": "Intalev Cayra Mindmap file",
-  "extension": "cayra",
-  "has_priority_over": [
-   "x-fmt/263"
-  ],
-  "signatures": [
-   {
-    "name": "Intalev Cayra Mindmap file",
-    "bofregex": "^.{30}bin\\/[a-z0-9]{8}\\-[a-z0-9]{4}\\-[a-z0-9]{4}\\-[a-z0-9]{4}\\-[a-z0-9]{12}\\x20\\xa2",
-    "eofregex": "\\[Content_Types\\]\\.xmlPK\\x05\\x06\\x00.{17}$"
-   }
-  ]
- },
- "fido-fmt/python": {
-  "name": "Python script file",
-  "extension": "py",
-  "signatures": [
-   {
-    "name": "Python script file",
-    "bofregex": "^.{0,1024}\\x23\\x21(?:python|\\/usr\\/local\\/bin\\/python|\\/usr\\/bin\\/env python)"
-   }
-  ]
- },
- "fido-fmt/SPSS": {
-  "name": "SPSS file",
-  "extension": [
-   "sav",
-   "spp",
-   "sbs",
-   "sps",
-   "spo",
-   "spv"
-  ],
-  "mime": "application/x-spss",
-  "signatures": [
-   {
-    "name": "SPSS Statistical Data File",
-    "bofregex": "^\\$FL2@\\(#\\) (IBM SPSS STATISTICS DATA FILE|PASW STATISTICS DATA FILE)"
-   }
-  ]
- },
- "fido-fmt/nexus": {
-  "name": "Nexus",
-  "extension": "nxs",
-  "mime": "application/octet-stream",
-  "signatures": [
-   {
-    "name": "FIDO Nexus Signature",
-    "bofregex": "^\\x89\\x48\\x44\\x46\\x0d\\x0a\\x1a\\x0a\\x00{5}\\x08\\x08\\x00\\x04\\x00\\x10\\x00{13}\\xff{8}"
-   }
-  ]
- },
- "fido-fmt/aeh": {
-  "name": "iPer Advanced Embedded Hypertext",
-  "extension": "aeh",
-  "mime": "text/html",
-  "content_type": "hypertext",
-  "signatures": [
-   {
-    "name": "AEH",
-    "bofregex": "^ALDO"
-   }
-  ]
- },
- "fido-fmt/mobi": {
-  "name": "MobiPocket Reader",
-  "extension": [
-   "mobi",
-   "prc"
-  ],
-  "mime": "application/x-mobipocket-ebook",
-  "signatures": [
-   {
-    "name": "Mobi",
-    "bofregex": "^(\\.|\\x00){60}BOOKMOBI"
-   }
-  ]
- },
- "fido-fmt/x-pdb": {
-  "name": "Protein Data Bank",
-  "version": "3.30",
-  "extension": "pdb",
-  "mime": "chemical/x-pdb",
-  "content_type": "ASCII text",
-  "has_priority_over": [
-   "x-fmt/283",
-   "x-fmt/111"
-  ],
-  "signatures": [
-   {
-    "name": "PDB",
-    "bofregex": "^HEADER.{44}[0-9]{3}\\-[a-z]{3}\\-[0-9]{3}.{3}[0-9]{1}[a-z]{3}",
-    "varregex": "END\\x20{77}\\x0A$"
-   }
-  ]
- },
- "fido-fmt/pgf": {
-  "name": "Progressive Graphics File",
-  "extension": "pgf",
-  "signatures": [
-   {
-    "name": "PGF (little-endian)",
-    "bofregex": "^PGF"
-   }
-  ]
+ "version": "84-0",
+ "comment": "Use this file to add your own signatures",
+ "formats": {
+  "fido-fmt/189.word": {
+   "name": "Microsoft Office Open XML - Word",
+   "extension": "docx",
+   "has_priority_over": [
+    "x-fmt/263",
+    "fmt/189"
+   ],
+   "signatures": [
+    {
+     "name": "Microsoft Office Open XML - Word",
+     "bofregex": "^.{30}\\[Content_Types\\]\\.xml %a2",
+     "eofregex": "%00%00word/.{1,20}\\.xmlPK%01%02%2d.{0,2000}$"
+    }
+   ]
+  },
+  "fido-fmt/189.xl": {
+   "name": "Microsoft Office Open XML - Excel",
+   "extension": "xlsx",
+   "has_priority_over": [
+    "x-fmt/263",
+    "fmt/189"
+   ],
+   "signatures": [
+    {
+     "name": "Microsoft Office Open XML - Excel",
+     "bofregex": "^.{30}\\[Content_Types\\]\\.xml %a2",
+     "eofregex": "%00xl/.{1,20}\\.xmlPK%01%02%2d.{0,2000}$"
+    }
+   ]
+  },
+  "fido-fmt/189.ppt": {
+   "name": "Microsoft Office Open XML - Powerpoint",
+   "extension": "pptx",
+   "has_priority_over": [
+    "x-fmt/263",
+    "fmt/189"
+   ],
+   "signatures": [
+    {
+     "name": "Microsoft Office Open XML - Powerpoint",
+     "bofregex": "^.{30}\\[Content_Types\\]\\.xml %a2",
+     "eofregex": "%00ppt/.{1,20}\\.xmlPK%01%02%2d.{0,2000}$"
+    }
+   ]
+  },
+  "fido-fmt/134": {
+   "name": "MPEG 1/2 Audio Layer 3 - fido update",
+   "extension": "mp3",
+   "mime": "audio/mpeg",
+   "signatures": [
+    {
+     "name": "MPEG-1/2 Audio Layer 3",
+     "bofregex": "^ID3",
+     "eofregex": "%ff[%fa%fb%f2%f3][%10-%eb].{46,1439}%ff[%fa%fb%f2%f3][%10-%eb].{46,1439}$"
+    }
+   ]
+  },
+  "fido-x-fmt/384": {
+   "name": "Quicktime",
+   "extension": "mov",
+   "mime": "video/quicktime",
+   "signatures": [
+    {
+     "name": "QuickTime",
+     "bofregex": "^%00{3} ftypqt.{0,25}qt.{0,20}moov.{4}mvhd"
+    }
+   ]
+  },
+  "fido-fmt/40": {
+   "name": "Microsoft Word for Windows Document",
+   "extension": "doc",
+   "mime": "application/msword",
+   "has_priority_over": [
+    "fmt/111"
+   ],
+   "signatures": [
+    {
+     "name": "Microsoft Word for Windows 97 - 2002",
+     "bofregex": "^%d0%cf%11%e0%a1%b1%1a%e1.{20}%fe%ff",
+     "varregex": "Microsoft (?:Office Word|Word)(?: 8\\.0| 9\\.0| 10\\.0|-Dokument| 97-2003)"
+    }
+   ]
+  },
+  "fido-fmt/45": {
+   "name": "Rich Text Format",
+   "extension": "rtf",
+   "mime": [
+    "application/rtf",
+    "text/rtf"
+   ],
+   "signatures": [
+    {
+     "name": "RTF 1.0 - 1.4 (generic)",
+     "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
+    }
+   ]
+  },
+  "fido-fmt/46": {
+   "name": "Rich Text Format",
+   "extension": "rtf",
+   "mime": [
+    "application/rtf",
+    "text/rtf"
+   ],
+   "signatures": [
+    {
+     "name": "RTF 1.0 - 1.4 (generic)",
+     "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
+    }
+   ]
+  },
+  "fido-fmt/47": {
+   "name": "Rich Text Format",
+   "extension": "rtf",
+   "mime": [
+    "application/rtf",
+    "text/rtf"
+   ],
+   "signatures": [
+    {
+     "name": "RTF 1.0 - 1.4 (generic)",
+     "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
+    }
+   ]
+  },
+  "fido-fmt/48": {
+   "name": "Rich Text Format",
+   "extension": "rtf",
+   "mime": [
+    "application/rtf",
+    "text/rtf"
+   ],
+   "signatures": [
+    {
+     "name": "RTF 1.0 - 1.4 (generic)",
+     "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
+    }
+   ]
+  },
+  "fido-fmt/49": {
+   "name": "Rich Text Format",
+   "extension": "rtf",
+   "mime": [
+    "application/rtf",
+    "text/rtf"
+   ],
+   "signatures": [
+    {
+     "name": "RTF 1.0 - 1.4 (generic)",
+     "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
+    }
+   ]
+  },
+  "fido-fmt/cayra": {
+   "name": "Intalev Cayra Mindmap file",
+   "extension": "cayra",
+   "has_priority_over": [
+    "x-fmt/263"
+   ],
+   "signatures": [
+    {
+     "name": "Intalev Cayra Mindmap file",
+     "bofregex": "^.{30}bin\\/[a-z0-9]{8}\\-[a-z0-9]{4}\\-[a-z0-9]{4}\\-[a-z0-9]{4}\\-[a-z0-9]{12}%20%a2",
+     "eofregex": "\\[Content_Types\\]\\.xmlPK%05%06%00.{17}$"
+    }
+   ]
+  },
+  "fido-fmt/python": {
+   "name": "Python script file",
+   "extension": "py",
+   "signatures": [
+    {
+     "name": "Python script file",
+     "bofregex": "^.{0,1024}%23%21(?:python|\\/usr\\/local\\/bin\\/python|\\/usr\\/bin\\/env python)"
+    }
+   ]
+  },
+  "fido-fmt/SPSS": {
+   "name": "SPSS file",
+   "extension": [
+    "sav",
+    "spp",
+    "sbs",
+    "sps",
+    "spo",
+    "spv"
+   ],
+   "mime": "application/x-spss",
+   "signatures": [
+    {
+     "name": "SPSS Statistical Data File",
+     "bofregex": "^\\$FL2@\\(#\\) (IBM SPSS STATISTICS DATA FILE|PASW STATISTICS DATA FILE)"
+    }
+   ]
+  },
+  "fido-fmt/nexus": {
+   "name": "Nexus",
+   "extension": "nxs",
+   "mime": "application/octet-stream",
+   "signatures": [
+    {
+     "name": "FIDO Nexus Signature",
+     "bofregex": "^%89%48%44%46%0d%0a%1a%0a%00{5}%08%08%00%04%00%10%00{13}%ff{8}"
+    }
+   ]
+  },
+  "fido-fmt/aeh": {
+   "name": "iPer Advanced Embedded Hypertext",
+   "extension": "aeh",
+   "mime": "text/html",
+   "content_type": "hypertext",
+   "signatures": [
+    {
+     "name": "AEH",
+     "bofregex": "^ALDO"
+    }
+   ]
+  },
+  "fido-fmt/mobi": {
+   "name": "MobiPocket Reader",
+   "extension": [
+    "mobi",
+    "prc"
+   ],
+   "mime": "application/x-mobipocket-ebook",
+   "signatures": [
+    {
+     "name": "Mobi",
+     "bofregex": "^(\\.|%00){60}BOOKMOBI"
+    }
+   ]
+  },
+  "fido-fmt/x-pdb": {
+   "name": "Protein Data Bank",
+   "version": "3.30",
+   "extension": "pdb",
+   "mime": "chemical/x-pdb",
+   "content_type": "ASCII text",
+   "has_priority_over": [
+    "x-fmt/283",
+    "x-fmt/111"
+   ],
+   "signatures": [
+    {
+     "name": "PDB",
+     "bofregex": "^HEADER.{44}[0-9]{3}\\-[a-z]{3}\\-[0-9]{3}.{3}[0-9]{1}[a-z]{3}",
+     "varregex": "END%20{77}%0A$"
+    }
+   ]
+  },
+  "fido-fmt/pgf": {
+   "name": "Progressive Graphics File",
+   "extension": "pgf",
+   "signatures": [
+    {
+     "name": "PGF (little-endian)",
+     "bofregex": "^PGF"
+    }
+   ]
+  }
  }
 }

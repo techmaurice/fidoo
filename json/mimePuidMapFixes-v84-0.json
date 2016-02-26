@@ -1,27 +1,31 @@
 {
+ "version": "84-0",
+ "comment": "Use this file to map mimetypes to signatures",
+ "formats": {
   "audio/mp3": [
-    "x-fmt/279",
-    "fmt/134",
-    "fmt/198",
-    "fmt/347"
+   "x-fmt/279",
+   "fmt/134",
+   "fmt/198",
+   "fmt/347"
   ],
   "application/x-msdownload": [
-    "x-fmt/411",
-    "x-fmt/436",
-    "x-fmt/437",
-    "x-fmt/438",
-    "x-fmt/439",
-    "x-fmt/440",
-    "x-fmt/441",
-    "x-fmt/442",
-    "x-fmt/443",
-    "x-fmt/444",
-    "x-fmt/445",
-    "x-fmt/446",
-    "x-fmt/447",
-    "x-fmt/448",
-    "x-fmt/450",
-    "x-fmt/451",
-    "x-fmt/453"
+   "x-fmt/411",
+   "x-fmt/436",
+   "x-fmt/437",
+   "x-fmt/438",
+   "x-fmt/439",
+   "x-fmt/440",
+   "x-fmt/441",
+   "x-fmt/442",
+   "x-fmt/443",
+   "x-fmt/444",
+   "x-fmt/445",
+   "x-fmt/446",
+   "x-fmt/447",
+   "x-fmt/448",
+   "x-fmt/450",
+   "x-fmt/451",
+   "x-fmt/453"
   ]
+ }
 }

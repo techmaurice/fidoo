@@ -17,6 +17,12 @@
       "fmt/16",
       "fmt/17"
      ],
+     "pronomSupertypeOf": [
+      "fmt/146",
+      "fmt/147",
+      "fmt/148"
+     ],
+     "pronomSubtypeOf": "",
      "matchtypes": [
       "bof",
       "eof"
@@ -38,6 +44,8 @@
      "pronomHasPriorityOver": [
       "fmt/41"
      ],
+     "pronomSupertypeOf": "",
+     "pronomSubtypeOf": "",
      "matchtypes": [
       "bof",
       "eof"

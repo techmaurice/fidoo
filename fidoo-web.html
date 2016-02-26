@@ -47,10 +47,10 @@ pre {
 var files = {};
 var maxFiles = 250;
 window.onload = function() { 
-	 document.getElementById("files").addEventListener("change", handleFileSelect);
-	 document.getElementById("browse").addEventListener("click", function() {document.getElementById("files").click();});
-	 document.getElementById("libVersion").innerHTML = Fidoo.libVersion;
-	 document.getElementById("pronomSignatureVersion").innerHTML = Fidoo.pronomSignatureVersion;
+	document.getElementById("files").addEventListener("change", handleFileSelect);
+	document.getElementById("browse").addEventListener("click", function() {document.getElementById("files").click();});
+	document.getElementById("libVersion").innerHTML = Fidoo.libVersion;
+	setTimeout(function(){document.getElementById("pronomSignatureVersion").innerHTML = Fidoo.pronomSignatureVersion;},100);
 	 }
 function write(element, content) {
 	document.getElementById(element).innerHTML = content;
