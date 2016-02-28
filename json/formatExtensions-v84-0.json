@@ -261,6 +261,17 @@
      "bofregex": "^PGF"
     }
    ]
+  },
+  "fido-fmt/torrent": {
+   "name": "BitTorrent File",
+   "extension": "torrent",
+   "mime": "application/x-bittorrent",
+   "signatures": [
+    {
+     "name": "BitTorrent",
+     "bofregex": "^d8%3aannounce"
+    }
+   ]
   }
  }
 }
