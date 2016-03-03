@@ -12,8 +12,8 @@
    "signatures": [
     {
      "name": "Microsoft Office Open XML - Word",
-     "bofregex": "^.{30}\\[Content_Types\\]\\.xml %a2",
-     "eofregex": "%00%00word/.{1,20}\\.xmlPK%01%02%2d.{0,2000}$"
+     "bofregex": "^.{30}\\[Content_Types\\]\\.xml \\xa2",
+     "eofregex": "\\x00\\x00word/.{1,20}\\.xmlPK\\x01\\x02\\x2d.{0,2000}$"
     }
    ]
   },
@@ -27,8 +27,8 @@
    "signatures": [
     {
      "name": "Microsoft Office Open XML - Excel",
-     "bofregex": "^.{30}\\[Content_Types\\]\\.xml %a2",
-     "eofregex": "%00xl/.{1,20}\\.xmlPK%01%02%2d.{0,2000}$"
+     "bofregex": "^.{30}\\[Content_Types\\]\\.xml \\xa2",
+     "eofregex": "\\x00xl/.{1,20}\\.xmlPK\\x01\\x02\\x2d.{0,2000}$"
     }
    ]
   },
@@ -42,8 +42,8 @@
    "signatures": [
     {
      "name": "Microsoft Office Open XML - Powerpoint",
-     "bofregex": "^.{30}\\[Content_Types\\]\\.xml %a2",
-     "eofregex": "%00ppt/.{1,20}\\.xmlPK%01%02%2d.{0,2000}$"
+     "bofregex": "^.{30}\\[Content_Types\\]\\.xml \\xa2",
+     "eofregex": "\\x00ppt/.{1,20}\\.xmlPK\\x01\\x02\\x2d.{0,2000}$"
     }
    ]
   },
@@ -55,7 +55,7 @@
     {
      "name": "MPEG-1/2 Audio Layer 3",
      "bofregex": "^ID3",
-     "eofregex": "%ff[%fa%fb%f2%f3][%10-%eb].{46,1439}%ff[%fa%fb%f2%f3][%10-%eb].{46,1439}$"
+     "eofregex": "\\xff[\\xfa\\xfb\\xf2\\xf3][\\x10-\\xeb].{46,1439}\\xff[\\xfa\\xfb\\xf2\\xf3][\\x10-\\xeb].{46,1439}$"
     }
    ]
   },
@@ -66,7 +66,7 @@
    "signatures": [
     {
      "name": "QuickTime",
-     "bofregex": "^%00{3} ftypqt.{0,25}qt.{0,20}moov.{4}mvhd"
+     "bofregex": "^\\x00{3} ftypqt.{0,25}qt.{0,20}moov.{4}mvhd"
     }
    ]
   },
@@ -80,7 +80,7 @@
    "signatures": [
     {
      "name": "Microsoft Word for Windows 97 - 2002",
-     "bofregex": "^%d0%cf%11%e0%a1%b1%1a%e1.{20}%fe%ff",
+     "bofregex": "^\\xd0\\xcf\\x11\\xe0\\xa1\\xb1\\x1a\\xe1.{20}\\xfe\\xff",
      "varregex": "Microsoft (?:Office Word|Word)(?: 8\\.0| 9\\.0| 10\\.0|-Dokument| 97-2003)"
     }
    ]
@@ -164,8 +164,8 @@
    "signatures": [
     {
      "name": "Intalev Cayra Mindmap file",
-     "bofregex": "^.{30}bin\\/[a-z0-9]{8}\\-[a-z0-9]{4}\\-[a-z0-9]{4}\\-[a-z0-9]{4}\\-[a-z0-9]{12}%20%a2",
-     "eofregex": "\\[Content_Types\\]\\.xmlPK%05%06%00.{17}$"
+     "bofregex": "^.{30}bin\\/[a-z0-9]{8}\\-[a-z0-9]{4}\\-[a-z0-9]{4}\\-[a-z0-9]{4}\\-[a-z0-9]{12}\\x20\\xa2",
+     "eofregex": "\\[Content_Types\\]\\.xmlPK\\x05\\x06\\x00.{17}$"
     }
    ]
   },
@@ -175,7 +175,7 @@
    "signatures": [
     {
      "name": "Python script file",
-     "bofregex": "^.{0,1024}%23%21(?:python|\\/usr\\/local\\/bin\\/python|\\/usr\\/bin\\/env python)"
+     "bofregex": "^.{0,1024}\\x23\\x21(?:python|\\/usr\\/local\\/bin\\/python|\\/usr\\/bin\\/env python)"
     }
    ]
   },
@@ -204,7 +204,7 @@
    "signatures": [
     {
      "name": "FIDO Nexus Signature",
-     "bofregex": "^%89%48%44%46%0d%0a%1a%0a%00{5}%08%08%00%04%00%10%00{13}%ff{8}"
+     "bofregex": "^\\x89\\x48\\x44\\x46\\x0d\\x0a\\x1a\\x0a\\x00{5}\\x08\\x08\\x00\\x04\\x00\\x10\\x00{13}\\xff{8}"
     }
    ]
   },
@@ -230,7 +230,7 @@
    "signatures": [
     {
      "name": "Mobi",
-     "bofregex": "^(\\.|%00){60}BOOKMOBI"
+     "bofregex": "^(\\.|\\x00){60}BOOKMOBI"
     }
    ]
   },
@@ -248,7 +248,7 @@
     {
      "name": "PDB",
      "bofregex": "^HEADER.{44}[0-9]{3}\\-[a-z]{3}\\-[0-9]{3}.{3}[0-9]{1}[a-z]{3}",
-     "varregex": "END%20{77}%0A$"
+     "varregex": "END\\x20{77}\\x0A$"
     }
    ]
   },
@@ -262,14 +262,14 @@
     }
    ]
   },
-  "fido-fmt/torrent": {
+  "fidoo-fmt/torrent": {
    "name": "BitTorrent File",
    "extension": "torrent",
    "mime": "application/x-bittorrent",
    "signatures": [
     {
      "name": "BitTorrent",
-     "bofregex": "^d8%3aannounce"
+     "bofregex": "^d8\\x3aannounce"
     }
    ]
   }
