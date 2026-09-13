@@ -97,6 +97,17 @@ drop-in upgrade for existing consumers.
   "Loading signature data..." until `Fidoo.ready` resolves, instead of the
   old fixed 100ms `setTimeout` guess for showing the signature version.
 
+### Correction: `loadJSON` reverted from `fetch()` back to `XMLHttpRequest`
+
+The original 0.1.x code used `XMLHttpRequest` for browser signature loading.
+This pass initially "modernized" that to `fetch()` — which turned out to be
+a real regression, not just a style change: `fetch()` refuses `file://`
+URLs outright (a CORS error, even for a file in the same folder), while
+`XMLHttpRequest` still works for same-tree `file://` requests in the
+browsers this demo targets. That broke the common "just double-click
+fidoo-web.html, no server needed" workflow. Reverted `Fidoo.loadJSON` to
+XHR (still wrapped in a promise, so `Fidoo.ready` above works either way).
+
 ## fidoo-web.html
 
 - Modernized the embedded demo script (const/let, arrow functions,
