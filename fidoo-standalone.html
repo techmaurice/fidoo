@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8">
+<title>Fidoo Library Demo (standalone) - Format Identification of Digital Objects Online</title>
+<script type="text/javascript" src="lib/fidoo-setup.js"></script>
+<!--
+  This is the "just open the file, no server needed" demo. It preloads the
+  signature data via plain <script> tags rather than letting fidoo-core.js
+  fetch it with XHR/fetch(). Browsers treat a file:// page as a "null"
+  origin and (as of current Chrome) block essentially any same-tree
+  file:// request from it, for every request API, which breaks the "just
+  double-click this file" workflow. A <script src="..."> tag isn't subject
+  to that restriction - it's how this very script and fidoo-core.js are
+  themselves being loaded - so shipping the data the same way sidesteps the
+  problem instead of chasing whichever request API browsers haven't
+  restricted yet. If you regenerate the signature files at a new
+  PRONOM/FIDO version (tools/build-signatures.js), update these three
+  filenames to match (they must agree with lib/fidoo-setup.js).
+
+  If you're serving this over http(s) instead of opening it from disk, see
+  fidoo-web-example.html for a version that fetches the plain .json files
+  from the json/ folder with fetch() instead of relying on these preload
+  scripts.
+-->
+<script type="text/javascript" src="json/pronomSignatures-v116-0.js"></script>
+<script type="text/javascript" src="json/formatExtensions-v116-0.js"></script>
+<script type="text/javascript" src="json/mimePuidMapFixes-v116-0.js"></script>
+<script type="text/javascript" src="lib/fidoo-core.js"></script>
+<style>
+* {
+	font-family: Helvetica;
+	font-size: 16px;
+	margin: 2px;
+	}
+div, p {
+	font-size: 80%;
+	display: block;
+	}
+pre {
+	font-family: Courier;
+	}
+.link {
+	color: #0000ff;
+	background-color: #ffffff;
+	text-decoration: underline;
+	cursor: pointer;
+	}
+.link:hover {
+	color: #ffffff;
+	background-color: #0000ff;
+	text-decoration: underline;
+	}
+.clickLink {
+	color: #ffffff;
+	background-color: #0000ff;
+	text-decoration: underline;
+	cursor: pointer;
+	}
+#files {
+	visibility: hidden;
+	height:0px;
+	width:0px;
+	}
+</style>
+<script type="text/javascript">
+// example Fidoo demo browser app
+// pure javascript only, no jquery or other libraries
+let files = [];
+const maxFiles = 250;
+
+window.onload = () => {
+	document.getElementById("files").addEventListener("change", handleFileSelect);
+	document.getElementById("browse").addEventListener("click", () => document.getElementById("files").click());
+	document.getElementById("libVersion").textContent = Fidoo.libVersion;
+
+	// Signature data (currently ~700KB of JSON) is fetched asynchronously, so
+	// it is very possible for this page to finish loading before Fidoo has.
+	// Calling Fidoo.identifyFile() too early doesn't error - it just silently
+	// returns a result with no signature matches at all, since
+	// pronomSignatures/regexesMap are still empty. Fidoo.ready resolves once
+	// loading has actually finished, so disable file browsing until then
+	// instead of guessing with a timer.
+	const browseButton = document.getElementById("browse");
+	const filesInput = document.getElementById("files");
+	browseButton.disabled = true;
+	filesInput.disabled = true;
+	browseButton.textContent = "Loading signature data...";
+	Fidoo.ready.then(() => {
+		document.getElementById("pronomSignatureVersion").textContent = Fidoo.pronomSignatureVersion;
+		browseButton.disabled = false;
+		filesInput.disabled = false;
+		browseButton.textContent = "Browse files";
+	});
+};
+
+function write(element, content) {
+	document.getElementById(element).textContent = content;
+}
+
+function handleFileSelect() {
+	files = Array.from(document.getElementById("files").files);
+	const fileList = document.getElementById("fileList");
+	fileList.textContent = "";
+	files.slice(0, maxFiles).forEach((file) => {
+		const link = document.createElement("span");
+		link.className = "link";
+		link.textContent = file.name;
+		link.addEventListener("click", () => showResult(link));
+		fileList.appendChild(link);
+		fileList.appendChild(document.createTextNode(" / "));
+	});
+	write("result", "click on a filename for info");
+}
+
+function showResult(that) {
+	for (const span of document.getElementsByTagName("span")) {
+		if (span.id !== "libVersion" && span.id !== "pronomSignatureVersion") {
+			span.className = "link";
+		}
+	}
+	that.className = "clickLink";
+	readFileAndIdentify(that.textContent);
+}
+
+function readFileAndIdentify(filename) {
+	const matchingMethod = document.getElementById("matchingMethodRelaxed").checked ? "relaxed" : "strict";
+	const priorityOverride = document.getElementById("priorityOverride").checked;
+	const file = files.find((candidate) => candidate.name === filename);
+	if (!file) return;
+
+	const mimetype = file.type;
+	const fileReader = new FileReader();
+	fileReader.onload = (e) => {
+		try {
+			const result = Fidoo.identifyFile(e.target.result, filename, mimetype, matchingMethod, priorityOverride);
+			write("result", JSON.stringify(result, null, " "));
+		} catch (error) {
+			write("result", `Could not read '${filename}': ${error}`);
+		}
+	};
+	fileReader.onerror = (error) => {
+		write("result", `Could not read '${filename}': ${error.target.error.name}: ${error.target.error.message}`);
+	};
+	fileReader.readAsBinaryString(file);
+} // end readFileAndIdentify
+</script>
+</head>
+<body>
+<h1>Fidoo - Format Identification of Digital Objects Online</h1>
+<h2>Demo browser app using Fidoo library version <span id="libVersion">?</span> with PRONOM/FIDO signatures version <span id="pronomSignatureVersion">?</span></h2>
+<hr />
+Select one or more files: <button id="browse">Browse files</button> <input type="file" name="files[]" id="files" multiple />
+<hr />
+Matching method: <label>strict: <input type="radio" name="matchingMethod" id="matchingMethodStrict" value="strict" checked /></label> or  <label>relaxed: <input type="radio" name="matchingMethod" id="matchingMethodRelaxed" value="relaxed" /></label> [<a href="https://github.com/techmaurice/fidoo/blob/master/DOCUMENTATION.md" title="Documentation">&#128161;</a>]
+<hr />
+<label>Disable priority override: <input type="checkbox" name="priorityOverride" id="priorityOverride" value="enable" /></label> [<a href="https://github.com/techmaurice/fidoo/blob/master/DOCUMENTATION.md" title="Documentation">&#128161;</a>]
+<hr />
+If you change a setting, click the filename to identify it again.
+<hr />
+<h3>Files</h3>
+<div id="fileList">none</div>
+<hr />
+<h3>Info</h3>
+<div id="result_holder"><pre id="result">Browse one or more files and click on the name</pre></div>
+<hr />
+<h5>TechMaurice 2016</h5>
+</body>
+</html>

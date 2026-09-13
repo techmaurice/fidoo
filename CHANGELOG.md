@@ -164,6 +164,38 @@ Package name availability was confirmed manually (`fidoo` is not taken on
 npm) before bumping the version, since a version number can't be reused
 once published.
 
+## fidoo-web.html renamed to fidoo-standalone.html; added fidoo-web-example.html
+
+- `fidoo-web.html` is renamed to `fidoo-standalone.html` to make explicit
+  what makes it special: it's the "just open the file, no server needed"
+  demo, using the `<script>`-tag signature-data preload described above.
+  All references to it (`lib/fidoo-core.js` comments,
+  `tools/build-signatures.js`'s generated file header, `DOCUMENTATION.md`)
+  were updated to match. `README.md`'s external demo link was untouched
+  (it points at a hosted copy, not this repo file).
+- Added `fidoo-web-example.html`, a second demo for the case where you're
+  serving this over an actual http(s) server rather than opening it from
+  disk. Instead of the generated `.js` preload wrappers, it fetches the
+  three plain `.json` files directly from `json/` with `fetch()`, using the
+  filenames declared in `lib/fidoo-setup.js`, then loads `lib/fidoo-core.js`
+  via a dynamically-created `<script>` tag only once that data is in place
+  — so `Fidoo.loadSignatureData("browser")` finds `window.FidooPreloadedJSON`
+  already populated and never falls back to its own XHR loader. Since
+  `fetch()` refuses `file://` URLs outright, this page will not work opened
+  directly from disk — that's what `fidoo-standalone.html` is for. Each demo
+  now links to the other in its own header comment/body text so it's easy
+  to tell which one to use.
+- Verified the fetch()-preload flow the same way the original preload-script
+  mechanism was verified earlier in this pass: in a sandboxed (non-node)
+  `vm` context with a stubbed `fetch()` (serving the real local JSON files)
+  and a stubbed `XMLHttpRequest` that throws if constructed, confirming all
+  2,410 formats load via `fetch()` and `Fidoo.ready` resolves without XHR
+  ever being touched.
+- The three generated `json/*.js` preload files were regenerated with
+  `tools/write-preload-script.js` purely to pick up the renamed-file
+  mention in their auto-generated header comment — their signature data is
+  byte-for-byte unchanged.
+
 ## Not in scope for this pass
 
 Per your instructions, this pass did not add a real test suite, linting,

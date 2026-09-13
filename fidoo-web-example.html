@@ -2,25 +2,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="UTF-8">
-<title>Fidoo Library Demo - Format Identification of Digital Objects Online</title>
+<title>Fidoo Library Demo (fetch example) - Format Identification of Digital Objects Online</title>
 <script type="text/javascript" src="lib/fidoo-setup.js"></script>
 <!--
-  Preload the signature data via plain <script> tags rather than letting
-  fidoo-core.js fetch it with XHR/fetch(). Browsers treat a file:// page as
-  a "null" origin and (as of current Chrome) block essentially any
-  same-tree file:// request from it, for every request API, which breaks
-  the "just double-click fidoo-web.html" workflow. A <script src="..."> tag
-  isn't subject to that restriction - it's how this very script and
-  fidoo-core.js are themselves being loaded - so shipping the data the same
-  way sidesteps the problem instead of chasing whichever request API
-  browsers haven't restricted yet. If you regenerate the signature files at
-  a new PRONOM/FIDO version (tools/build-signatures.js), update these three
-  filenames to match (they must agree with lib/fidoo-setup.js).
+  This is the "served over http(s)" demo. Unlike fidoo-standalone.html
+  (which preloads the signature data via plain <script> tags so it also
+  works when opened directly from disk, file://), this page fetches the
+  plain .json files straight from the json/ folder with fetch() - no
+  generated .js preload wrappers involved.
+
+  fetch() unconditionally refuses file:// URLs (that's exactly why
+  fidoo-standalone.html exists), so this page only works when served by an
+  actual webserver, e.g. `npx http-server .` or `python3 -m http.server`
+  from the repo root, then open http://localhost:.../fidoo-web-example.html.
+  Opening it by double-clicking it will fail to load any signature data.
+
+  lib/fidoo-core.js is loaded dynamically, only after the fetches below
+  resolve and window.FidooPreloadedJSON is populated, so fidoo-core.js's
+  own preloaded-data check (see lib/fidoo-core.js's
+  Fidoo.loadSignatureData) finds the data already there and never falls
+  back to its own XHR-based loader.
 -->
-<script type="text/javascript" src="json/pronomSignatures-v116-0.js"></script>
-<script type="text/javascript" src="json/formatExtensions-v116-0.js"></script>
-<script type="text/javascript" src="json/mimePuidMapFixes-v116-0.js"></script>
-<script type="text/javascript" src="lib/fidoo-core.js"></script>
 <style>
 * {
 	font-family: Helvetica;
@@ -63,29 +65,73 @@ pre {
 let files = [];
 const maxFiles = 250;
 
+// Fetches the three signature JSON files from the json/ folder with
+// fetch() and stores them on window.FidooPreloadedJSON, using the same
+// filenames lib/fidoo-setup.js declares (falling back to the library's own
+// defaults if fidoo-setup.js isn't present for some reason). This must
+// finish - and window.FidooPreloadedJSON must be populated - before
+// lib/fidoo-core.js runs, which is why fidoo-core.js is loaded dynamically
+// afterwards instead of via a static <script> tag.
+async function preloadSignatureData() {
+	const setup = window.FidooUserSetup || {};
+	const filenames = [
+		setup.pronomSignaturesJSON || "pronomSignatures-v116-0.json",
+		setup.formatExtensionsJSON || "formatExtensions-v116-0.json",
+		setup.mimePuidMapFixesJSON || "mimePuidMapFixes-v116-0.json",
+	];
+	window.FidooPreloadedJSON = {};
+	await Promise.all(filenames.map(async (filename) => {
+		const response = await fetch(`json/${filename}`);
+		if (!response.ok) {
+			throw new Error(`Failed to fetch json/${filename}: ${response.status} ${response.statusText}`);
+		}
+		window.FidooPreloadedJSON[filename] = await response.json();
+	}));
+} // end preloadSignatureData
+
+// Loads lib/fidoo-core.js by appending a <script> tag, returning a promise
+// that resolves once it has actually run.
+function loadFidooCore() {
+	return new Promise((resolve, reject) => {
+		const script = document.createElement("script");
+		script.src = "lib/fidoo-core.js";
+		script.onload = () => resolve();
+		script.onerror = () => reject(new Error("Failed to load lib/fidoo-core.js"));
+		document.head.appendChild(script);
+	});
+} // end loadFidooCore
+
 window.onload = () => {
 	document.getElementById("files").addEventListener("change", handleFileSelect);
 	document.getElementById("browse").addEventListener("click", () => document.getElementById("files").click());
-	document.getElementById("libVersion").textContent = Fidoo.libVersion;
 
-	// Signature data (currently ~700KB of JSON) is fetched asynchronously, so
-	// it is very possible for this page to finish loading before Fidoo has.
-	// Calling Fidoo.identifyFile() too early doesn't error - it just silently
-	// returns a result with no signature matches at all, since
-	// pronomSignatures/regexesMap are still empty. Fidoo.ready resolves once
-	// loading has actually finished, so disable file browsing until then
-	// instead of guessing with a timer.
 	const browseButton = document.getElementById("browse");
 	const filesInput = document.getElementById("files");
 	browseButton.disabled = true;
 	filesInput.disabled = true;
-	browseButton.textContent = "Loading signature data...";
-	Fidoo.ready.then(() => {
-		document.getElementById("pronomSignatureVersion").textContent = Fidoo.pronomSignatureVersion;
-		browseButton.disabled = false;
-		filesInput.disabled = false;
-		browseButton.textContent = "Browse files";
-	});
+	browseButton.textContent = "Fetching signature data...";
+
+	preloadSignatureData()
+		.then(loadFidooCore)
+		.then(() => {
+			// Fidoo now exists (lib/fidoo-core.js just ran) and, since
+			// window.FidooPreloadedJSON was already populated above,
+			// Fidoo.ready should resolve immediately - but await it anyway
+			// rather than assume that, in case the preload was incomplete
+			// and it had to fall back to its own loader for a file.
+			document.getElementById("libVersion").textContent = Fidoo.libVersion;
+			return Fidoo.ready;
+		})
+		.then(() => {
+			document.getElementById("pronomSignatureVersion").textContent = Fidoo.pronomSignatureVersion;
+			browseButton.disabled = false;
+			filesInput.disabled = false;
+			browseButton.textContent = "Browse files";
+		})
+		.catch((error) => {
+			browseButton.textContent = "Failed to load signature data";
+			write("result", `Could not load Fidoo: ${error}. This page fetches JSON over http(s) and needs to be served by a webserver - if you opened it directly from disk (file://), use fidoo-standalone.html instead.`);
+		});
 };
 
 function write(element, content) {
@@ -143,6 +189,7 @@ function readFileAndIdentify(filename) {
 <body>
 <h1>Fidoo - Format Identification of Digital Objects Online</h1>
 <h2>Demo browser app using Fidoo library version <span id="libVersion">?</span> with PRONOM/FIDO signatures version <span id="pronomSignatureVersion">?</span></h2>
+<p>This page loads signature data with <code>fetch()</code> from the <code>json/</code> folder, so it must be served over http(s) - it will not work opened directly from disk. For that, use <a href="fidoo-standalone.html">fidoo-standalone.html</a> instead.</p>
 <hr />
 Select one or more files: <button id="browse">Browse files</button> <input type="file" name="files[]" id="files" multiple />
 <hr />
