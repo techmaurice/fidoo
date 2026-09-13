@@ -51,9 +51,25 @@ window.onload = () => {
 	document.getElementById("files").addEventListener("change", handleFileSelect);
 	document.getElementById("browse").addEventListener("click", () => document.getElementById("files").click());
 	document.getElementById("libVersion").textContent = Fidoo.libVersion;
-	setTimeout(() => {
+
+	// Signature data (currently ~700KB of JSON) is fetched asynchronously, so
+	// it is very possible for this page to finish loading before Fidoo has.
+	// Calling Fidoo.identifyFile() too early doesn't error - it just silently
+	// returns a result with no signature matches at all, since
+	// pronomSignatures/regexesMap are still empty. Fidoo.ready resolves once
+	// loading has actually finished, so disable file browsing until then
+	// instead of guessing with a timer.
+	const browseButton = document.getElementById("browse");
+	const filesInput = document.getElementById("files");
+	browseButton.disabled = true;
+	filesInput.disabled = true;
+	browseButton.textContent = "Loading signature data...";
+	Fidoo.ready.then(() => {
 		document.getElementById("pronomSignatureVersion").textContent = Fidoo.pronomSignatureVersion;
-	}, 100);
+		browseButton.disabled = false;
+		filesInput.disabled = false;
+		browseButton.textContent = "Browse files";
+	});
 };
 
 function write(element, content) {

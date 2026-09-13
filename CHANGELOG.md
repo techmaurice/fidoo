@@ -80,6 +80,23 @@ drop-in upgrade for existing consumers.
   a plain `"utf8"` argument.
 - Signature JSON filenames updated to the v116 set.
 
+## fidoo-web.html / lib/fidoo-core.js: fixed a signature-data load race
+
+- Found while testing: identifying a file in the browser demo very shortly
+  after page load could return an empty result (`signatureMatches: {}`,
+  `extensionPuids: []`, `mimetypePuids: []`) for *any* file, not because
+  nothing matched but because `Fidoo.pronomSignatures`/`regexesMap` were
+  still empty — the ~700KB of signature JSON is fetched asynchronously and
+  hadn't arrived yet. This race existed in the original code too (it used
+  async `XMLHttpRequest`), but the v116 data is roughly 2x the size of v84,
+  so it's now much easier to hit in normal use.
+- Added `Fidoo.ready`, a promise that resolves once signature data has
+  actually finished loading (immediately in node.js; after all fetches
+  resolve in the browser).
+- `fidoo-web.html` now disables the "Browse files" button/input and shows
+  "Loading signature data..." until `Fidoo.ready` resolves, instead of the
+  old fixed 100ms `setTimeout` guess for showing the signature version.
+
 ## fidoo-web.html
 
 - Modernized the embedded demo script (const/let, arrow functions,
