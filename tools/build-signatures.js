@@ -218,14 +218,41 @@ function main() {
 	};
 
 	fs.mkdirSync(outDir, { recursive: true });
-	const pronomOut = path.join(outDir, `pronomSignatures-v${versionTag}.json`);
-	const extOut = path.join(outDir, `formatExtensions-v${versionTag}.json`);
-
-	fs.writeFileSync(pronomOut, JSON.stringify(pronomSignatures, null, " "));
-	fs.writeFileSync(extOut, JSON.stringify(formatExtensions, null, " "));
-
-	console.log(`Wrote ${pronomOut}`);
-	console.log(`Wrote ${extOut}`);
+	writeSignatureFile(outDir, `pronomSignatures-v${versionTag}.json`, pronomSignatures);
+	writeSignatureFile(outDir, `formatExtensions-v${versionTag}.json`, formatExtensions);
 }
 
-main();
+// Writes both the plain <name>.json (used by fidoo-cli.js/node) and a
+// same-named <name>.js "preload script" (used by fidoo-web.html) that just
+// assigns the same data onto window.FidooPreloadedJSON. See the comment in
+// lib/fidoo-core.js's Fidoo.loadSignatureData for why the browser path needs
+// this: fetch()/XHR to a file:// JSON file is blocked by current browsers'
+// CORS handling even from a same-folder file:// page, but a <script> tag
+// isn't subject to that restriction.
+function writeSignatureFile(outDir, filename, data) {
+	const jsonPath = path.join(outDir, filename);
+	fs.writeFileSync(jsonPath, JSON.stringify(data, null, " "));
+	console.log(`Wrote ${jsonPath}`);
+
+	const jsPath = jsonPath.replace(/\.json$/, ".js");
+	writePreloadScript(jsPath, filename, data);
+}
+
+function writePreloadScript(jsPath, filename, data) {
+	const jsContent = `// Auto-generated from ${filename} by tools/build-signatures.js - do not edit by hand.
+// Preloads this signature file via a plain <script> tag so fidoo-web.html
+// works when opened directly from disk (file://), where a fetch()/XHR
+// request for the .json file is blocked by the browser. See
+// lib/fidoo-core.js's Fidoo.loadSignatureData.
+window.FidooPreloadedJSON = window.FidooPreloadedJSON || {};
+window.FidooPreloadedJSON[${JSON.stringify(filename)}] = ${JSON.stringify(data)};
+`;
+	fs.writeFileSync(jsPath, jsContent);
+	console.log(`Wrote ${jsPath}`);
+}
+
+module.exports = { writeSignatureFile, writePreloadScript };
+
+if (require.main === module) {
+	main();
+}

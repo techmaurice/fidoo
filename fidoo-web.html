@@ -4,6 +4,22 @@
 <meta charset="UTF-8">
 <title>Fidoo Library Demo - Format Identification of Digital Objects Online</title>
 <script type="text/javascript" src="lib/fidoo-setup.js"></script>
+<!--
+  Preload the signature data via plain <script> tags rather than letting
+  fidoo-core.js fetch it with XHR/fetch(). Browsers treat a file:// page as
+  a "null" origin and (as of current Chrome) block essentially any
+  same-tree file:// request from it, for every request API, which breaks
+  the "just double-click fidoo-web.html" workflow. A <script src="..."> tag
+  isn't subject to that restriction - it's how this very script and
+  fidoo-core.js are themselves being loaded - so shipping the data the same
+  way sidesteps the problem instead of chasing whichever request API
+  browsers haven't restricted yet. If you regenerate the signature files at
+  a new PRONOM/FIDO version (tools/build-signatures.js), update these three
+  filenames to match (they must agree with lib/fidoo-setup.js).
+-->
+<script type="text/javascript" src="json/pronomSignatures-v116-0.js"></script>
+<script type="text/javascript" src="json/formatExtensions-v116-0.js"></script>
+<script type="text/javascript" src="json/mimePuidMapFixes-v116-0.js"></script>
 <script type="text/javascript" src="lib/fidoo-core.js"></script>
 <style>
 * {
