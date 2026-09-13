@@ -1,5 +1,5 @@
 {
- "version": "84-0",
+ "version": "116-0",
  "comment": "Use this file to add your own signatures",
  "formats": {
   "fido-fmt/189.word": {
@@ -47,30 +47,19 @@
     }
    ]
   },
-  "fido-fmt/134": {
+  "fmt/134": {
    "name": "MPEG 1/2 Audio Layer 3 - fido update",
    "extension": "mp3",
    "mime": "audio/mpeg",
    "signatures": [
     {
      "name": "MPEG-1/2 Audio Layer 3",
-     "bofregex": "^ID3",
-     "eofregex": "\\xff[\\xfa\\xfb\\xf2\\xf3][\\x10-\\xeb].{46,1439}\\xff[\\xfa\\xfb\\xf2\\xf3][\\x10-\\xeb].{46,1439}$"
+     "eofregex": "\\xff[\\xfa\\xfb\\xf2\\xf3][\\x10-\\xeb].{46,1439}\\xff[\\xfa\\xfb\\xf2\\xf3][\\x10-\\xeb].{46,1439}$",
+     "bofregex": "^ID3"
     }
    ]
   },
-  "fido-x-fmt/384": {
-   "name": "Quicktime",
-   "extension": "mov",
-   "mime": "video/quicktime",
-   "signatures": [
-    {
-     "name": "QuickTime",
-     "bofregex": "^\\x00{3} ftypqt.{0,25}qt.{0,20}moov.{4}mvhd"
-    }
-   ]
-  },
-  "fido-fmt/40": {
+  "fmt/40": {
    "name": "Microsoft Word for Windows Document",
    "extension": "doc",
    "mime": "application/msword",
@@ -85,7 +74,7 @@
     }
    ]
   },
-  "fido-fmt/45": {
+  "fmt/45": {
    "name": "Rich Text Format",
    "extension": "rtf",
    "mime": [
@@ -99,7 +88,7 @@
     }
    ]
   },
-  "fido-fmt/46": {
+  "fmt/46": {
    "name": "Rich Text Format",
    "extension": "rtf",
    "mime": [
@@ -109,11 +98,11 @@
    "signatures": [
     {
      "name": "RTF 1.0 - 1.4 (generic)",
-     "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
+     "bofregex": "^$"
     }
    ]
   },
-  "fido-fmt/47": {
+  "fmt/47": {
    "name": "Rich Text Format",
    "extension": "rtf",
    "mime": [
@@ -123,11 +112,11 @@
    "signatures": [
     {
      "name": "RTF 1.0 - 1.4 (generic)",
-     "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
+     "bofregex": "^$"
     }
    ]
   },
-  "fido-fmt/48": {
+  "fmt/48": {
    "name": "Rich Text Format",
    "extension": "rtf",
    "mime": [
@@ -137,11 +126,11 @@
    "signatures": [
     {
      "name": "RTF 1.0 - 1.4 (generic)",
-     "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
+     "bofregex": "^$"
     }
    ]
   },
-  "fido-fmt/49": {
+  "fmt/49": {
    "name": "Rich Text Format",
    "extension": "rtf",
    "mime": [
@@ -151,7 +140,7 @@
    "signatures": [
     {
      "name": "RTF 1.0 - 1.4 (generic)",
-     "bofregex": "^\\{\\\\rt(?:f|f1)\\\\(?:adeflang1025|ansi|mac|pc|pca)"
+     "bofregex": "^$"
     }
    ]
   },
@@ -212,6 +201,7 @@
    "name": "iPer Advanced Embedded Hypertext",
    "extension": "aeh",
    "mime": "text/html",
+   "apple_uid": "public.data",
    "content_type": "hypertext",
    "signatures": [
     {
@@ -227,6 +217,7 @@
     "prc"
    ],
    "mime": "application/x-mobipocket-ebook",
+   "apple_uid": "public.data",
    "signatures": [
     {
      "name": "Mobi",
@@ -239,15 +230,16 @@
    "version": "3.30",
    "extension": "pdb",
    "mime": "chemical/x-pdb",
-   "content_type": "ASCII text",
+   "apple_uid": "public.data",
    "has_priority_over": [
     "x-fmt/283",
     "x-fmt/111"
    ],
+   "content_type": "ASCII text",
    "signatures": [
     {
      "name": "PDB",
-     "bofregex": "^HEADER.{44}[0-9]{3}\\-[a-z]{3}\\-[0-9]{3}.{3}[0-9]{1}[a-z]{3}",
+     "bofregex": "^HEADER.{44}\\d\\d\\-[A-Z]{3}-\\d\\d.{3}\\d\\w{3}",
      "varregex": "END\\x20{77}\\x0A$"
     }
    ]
@@ -255,10 +247,27 @@
   "fido-fmt/pgf": {
    "name": "Progressive Graphics File",
    "extension": "pgf",
+   "apple_uid": "public.data",
    "signatures": [
     {
      "name": "PGF (little-endian)",
      "bofregex": "^PGF"
+    }
+   ]
+  },
+  "fmt/483": {
+   "name": "ePub format",
+   "version": "1.0",
+   "extension": "epub",
+   "mime": "application/epub+zip",
+   "has_priority_over": [
+    "x-fmt/263",
+    "fmt/61"
+   ],
+   "signatures": [
+    {
+     "name": "EPUB file",
+     "bofregex": "^.{30}mimetypeapplication/epub\\+zip"
     }
    ]
   },

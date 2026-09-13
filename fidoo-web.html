@@ -44,103 +44,68 @@ pre {
 <script type="text/javascript">
 // example Fidoo demo browser app
 // pure javascript only, no jquery or other libraries
-var files = {};
-var maxFiles = 250;
-window.onload = function() { 
-	document.getElementById("files").addEventListener("change", handleFileSelect);
-	document.getElementById("browse").addEventListener("click", function() {document.getElementById("files").click();});
-	document.getElementById("libVersion").innerHTML = Fidoo.libVersion;
-	setTimeout(function(){document.getElementById("pronomSignatureVersion").innerHTML = Fidoo.pronomSignatureVersion;},100);
-	 }
-function write(element, content) {
-	document.getElementById(element).innerHTML = content;
-	}
-function appendChild(element, content) {
-	document.getElementById(element).appendChild(content);
-	}
-function appendHTML(element, content) {
-	document.getElementById(element).innerHTML += content;
-	}
+let files = [];
+const maxFiles = 250;
 
-function handleFileSelect(evt) {
-	files = document.getElementById("files").files;
-	document.getElementById("fileList").innerHTML = "";
-	for(var i = 0, file; file = files[i]; i++) {
-		var filename = escape(file.name);
-		var link = document.createElement("span");
-		link.setAttribute("class","link");
-		link.setAttribute("onclick","showResult(this);");
-		// filename needs to be escaped like:
-		// escape->decodeURIComponent->unescape
-		// because of special characters like "ï"
-		link.innerHTML = unescape(decodeURIComponent(escape(filename)));
-		appendChild("fileList", link);
-		appendHTML("fileList", " / ");
-		if(maxFiles === i) {
-			break;
-			}
-		}
+window.onload = () => {
+	document.getElementById("files").addEventListener("change", handleFileSelect);
+	document.getElementById("browse").addEventListener("click", () => document.getElementById("files").click());
+	document.getElementById("libVersion").textContent = Fidoo.libVersion;
+	setTimeout(() => {
+		document.getElementById("pronomSignatureVersion").textContent = Fidoo.pronomSignatureVersion;
+	}, 100);
+};
+
+function write(element, content) {
+	document.getElementById(element).textContent = content;
+}
+
+function handleFileSelect() {
+	files = Array.from(document.getElementById("files").files);
+	const fileList = document.getElementById("fileList");
+	fileList.textContent = "";
+	files.slice(0, maxFiles).forEach((file) => {
+		const link = document.createElement("span");
+		link.className = "link";
+		link.textContent = file.name;
+		link.addEventListener("click", () => showResult(link));
+		fileList.appendChild(link);
+		fileList.appendChild(document.createTextNode(" / "));
+	});
 	write("result", "click on a filename for info");
-	}
+}
 
 function showResult(that) {
-	var anchors = document.getElementsByTagName("span");
-	for(var i = 0; i < anchors.length; i++) {
-		if(anchors[i].id != "libVersion" && anchors[i].id != "pronomSignatureVersion") {
-			anchors[i].className = "link";
-			}
+	for (const span of document.getElementsByTagName("span")) {
+		if (span.id !== "libVersion" && span.id !== "pronomSignatureVersion") {
+			span.className = "link";
 		}
-	that.className = "clickLink";
-	var filename = escape(that.textContent);
-	var readFile = readFileAndIdentify(files, filename);
-	return true;
 	}
+	that.className = "clickLink";
+	readFileAndIdentify(that.textContent);
+}
 
-function readFileAndIdentify(fileObject, filename) {
-	var matchingMethod = "strict";
-	if(document.getElementById("matchingMethodRelaxed").checked == true) {
-		matchingMethod = "relaxed";
-		}
-	else {
-		matchingMethod = "strict";
-		}
-	var priorityOverride = false;
-	priorityOverride = document.getElementById("priorityOverride").checked;
-	for(var i = 0, file; file = files[i]; i++) {
-		var search = escape(file.name);
-		var mimetype = file.type;
-		if(search === filename) {
-			var browserInfo = returnBrowserInfo(file);
-			var fileReader = new FileReader();
-			fileReader.onload = function(e) {
-				try {
-					var result = Fidoo.identifyFile(e.target.result, filename, mimetype, matchingMethod, priorityOverride);
-					write("result", "" + JSON.stringify(result, null, " "));
-				}
-				catch(error) {
-					write("result", "Could not read '" + filename + "': " + error + ": " + error);
-					}
-			};
-			fileReader.onerror = function(error) {
-				write("result", "<pre>Could not read '" + filename + "': " + error.target.error.name + ": " + error.target.error.message);
-			};
-			fileReader.readAsBinaryString(file);
-			return true;
-			}
-		}
-	return true;
-	} // end readFileAndIdentify
+function readFileAndIdentify(filename) {
+	const matchingMethod = document.getElementById("matchingMethodRelaxed").checked ? "relaxed" : "strict";
+	const priorityOverride = document.getElementById("priorityOverride").checked;
+	const file = files.find((candidate) => candidate.name === filename);
+	if (!file) return;
 
-	function returnBrowserInfo(fileObject) {
-		return {
-			"lastModified": fileObject.lastModified,
-			"lastModifiedDate": fileObject.lastModifiedDate,
-			"name": fileObject.name,
-			"size": fileObject.size,
-			"mimetype": fileObject.type
-			};
-		} // end returnBrowserInfo
-
+	const mimetype = file.type;
+	const fileReader = new FileReader();
+	fileReader.onload = (e) => {
+		try {
+			const result = Fidoo.identifyFile(e.target.result, filename, mimetype, matchingMethod, priorityOverride);
+			write("result", JSON.stringify(result, null, " "));
+		} catch (error) {
+			write("result", `Could not read '${filename}': ${error}`);
+		}
+	};
+	fileReader.onerror = (error) => {
+		write("result", `Could not read '${filename}': ${error.target.error.name}: ${error.target.error.message}`);
+	};
+	fileReader.readAsBinaryString(file);
+} // end readFileAndIdentify
 </script>
 </head>
 <body>
