@@ -138,15 +138,33 @@ environment to click-test directly.
 - Removed `returnBrowserInfo()`, a function that was defined and called but
   whose return value was never used.
 
+## package.json: made it npm-publish-ready
+
+- `main` was `"fidoo-cli.js"` (the command-line demo), so `require("fidoo")`
+  would have loaded the CLI instead of the library. Changed to
+  `"lib/fidoo-core.js"`.
+- `license` was `"Apache 2.0"`, which is not a valid SPDX identifier (npm
+  warns/flags this on publish). Changed to `"Apache-2.0"`.
+- `version` bumped `0.1.4` → `0.2.0` (semver-minor, since this pass is
+  behavior-preserving but a substantial internal rewrite plus a signature
+  data migration). `Fidoo.libVersion` in `lib/fidoo-core.js` was updated to
+  match, so `Fidoo.libVersion` and the published package version agree.
+- Added a `files` allowlist (`lib`, `json`, `fidoo-cli.js`,
+  `DOCUMENTATION.md`) so the published tarball doesn't pick up
+  `debug/`, `fidoo-web.html`, test fixtures, etc. — only what the library
+  actually needs at runtime.
+- `scripts.test` was `"-v"`, left over from some other setup and not a
+  runnable command (`npm test` would fail immediately). There's still no
+  real test suite, so this was changed to a non-failing placeholder
+  (`echo "no tests specified yet"`) rather than left broken.
+- Added `engines.node: ">=16.9.0"` to document the minimum runtime this was
+  written and tested against (uses `Object.hasOwn`, added in Node 16.9).
+
+Package name availability was confirmed manually (`fidoo` is not taken on
+npm) before bumping the version, since a version number can't be reused
+once published.
+
 ## Not in scope for this pass
 
-Per your instructions, this pass did not touch: `package.json` (version,
-scripts, dependencies), test tooling, linting, or CI. The `test` script is
-still the placeholder `"-v"`. `tools/build-signatures.js` currently uses
-Node's built-in modules only (no new runtime dependency), so nothing here
-required a `package.json` change.
-
-If/when you're ready to publish, consider bumping the version (this is a
-behavior-preserving but fairly substantial internal change — `0.2.0` would
-be a reasonable semver-minor bump) and updating `Fidoo.libVersion` in
-`lib/fidoo-core.js` to match.
+Per your instructions, this pass did not add a real test suite, linting,
+or CI. `scripts.test` is a placeholder — see above.
